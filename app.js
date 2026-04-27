@@ -938,29 +938,23 @@ function renderTickerMeta(){
   if(meta) meta.innerHTML = `<span>${timeAgoLabel(state.meta.marketLastUpdated)}</span><i></i>`;
 }
 
-async function renderMarket(){
-  const show = state.meta.showMarketTicker !== false;
-  const ticker = $('#marketTicker');
-  if(ticker) ticker.classList.toggle('hidden', !show);
-  const switchEl = $('#marketTickerSwitch');
-  if(switchEl) switchEl.classList.toggle('on', show);
-  const autoEl = $('#marketAutoRefreshSwitch');
-  if(autoEl) autoEl.classList.toggle('on', state.meta.marketAutoRefresh !== false);
 
-  let data;
-  try{
-    data = await loadMarketData();
-  }catch(error){
-    data = favoriteAssetIds().map(fallbackForAsset);
-  }
+let lastMarketData = null;
+
+function getFallbackMarketData(){
+  return favoriteAssetIds().map(fallbackForAsset);
+}
+
+function paintMarket(data){
+  lastMarketData = data && data.length ? data : getFallbackMarketData();
 
   if($('#tickerTrack')){
-    $('#tickerTrack').innerHTML = data.map(item => `<span class="ticker-item"><strong>${item.symbol}</strong><span>${currencyPrefix(item)} ${item.price}</span><span class="${tickerClass(item.change)}">${item.change}</span></span>`).join('');
+    $('#tickerTrack').innerHTML = lastMarketData.map(item => `<span class="ticker-item"><strong>${item.symbol}</strong><span>${currencyPrefix(item)} ${item.price}</span><span class="${tickerClass(item.change)}">${item.change}</span></span>`).join('');
   }
   renderTickerMeta();
 
   if($('#marketCards')){
-    $('#marketCards').innerHTML = data.map(item => `
+    $('#marketCards').innerHTML = lastMarketData.map(item => `
       <div class="market-card favorite-card">
         <div class="asset-card-head">
           <span>${item.symbol}</span>
@@ -970,18 +964,47 @@ async function renderMarket(){
         <small class="${tickerClass(item.change)}">${item.change}</small>
         <em>${item.name}</em>
       </div>`).join('');
+
     $$('[data-remove-asset]').forEach(btn => btn.addEventListener('click', () => {
       state.meta.favoriteAssets = favoriteAssetIds().filter(id => id !== btn.dataset.removeAsset);
       if(!state.meta.favoriteAssets.length) state.meta.favoriteAssets = ['USD-BRL'];
       saveState();
+      paintMarket(getFallbackMarketData());
       renderAssetOptions();
-      renderMarket();
+      refreshMarket(true);
     }));
   }
 
   if($('#newsList')){
     $('#newsList').innerHTML = marketNews.map(item => `<article class="news-item"><div class="news-icon">${item.icon}</div><div><h3>${item.title}</h3><p>${item.desc}</p></div><span class="news-tag">${item.tag}</span></article>`).join('');
   }
+}
+
+async function refreshMarket(forceRemote = false){
+  const fallback = getFallbackMarketData();
+  if(!lastMarketData || forceRemote){
+    paintMarket(fallback);
+  }
+
+  try{
+    const remote = await loadMarketData();
+    paintMarket(remote);
+  }catch(error){
+    paintMarket(fallback);
+  }
+}
+
+async function renderMarket(){
+  const show = state.meta.showMarketTicker !== false;
+  const ticker = $('#marketTicker');
+  if(ticker) ticker.classList.toggle('hidden', !show);
+  const switchEl = $('#marketTickerSwitch');
+  if(switchEl) switchEl.classList.toggle('on', show);
+  const autoEl = $('#marketAutoRefreshSwitch');
+  if(autoEl) autoEl.classList.toggle('on', state.meta.marketAutoRefresh !== false);
+
+  paintMarket(getFallbackMarketData());
+  refreshMarket();
 }
 
 function renderAssetOptions(){

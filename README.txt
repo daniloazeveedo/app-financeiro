@@ -85,3 +85,13 @@ Atualização 3.2.2:
 - ativos disponíveis: IBOV, Dólar, Euro, Bitcoin, PETR4, VALE3, ITUB4, S&P 500 e Nasdaq;
 - cotações reais via APIs públicas gratuitas quando disponíveis, com fallback local para evitar quebra visual;
 - opção nas configurações para exibir/ocultar barra de cotações e ativar/desativar atualização automática.
+
+
+Atualização 3.2.3:
+- corrigido o header/ticker invadindo o conteúdo;
+- barra de ativos agora renderiza fallback imediatamente e depois tenta atualizar com API real;
+- corrigido botão "Adicionar ativo";
+- adicionada atualização automática real com fallback visual;
+- configurações reorganizadas para não cortar os botões;
+- barras internas de lançamentos/relatórios/categorias alinhadas no desktop;
+- correção estrutural aplicada para todas as abas no desktop.

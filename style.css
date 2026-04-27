@@ -2429,3 +2429,312 @@ body.theme-dark .connection321-add{background:#20252C;color:#fff;border-color:rg
     width:100%;
   }
 }
+
+/* =========================================================
+   v3.2.3 — estabilidade desktop em todas as abas
+   ========================================================= */
+@media (min-width:900px){
+  body, html{
+    overflow:hidden !important;
+    background:#EDEEEA !important;
+  }
+
+  .phone-shell,
+  .app-screen{
+    width:100vw !important;
+    max-width:none !important;
+    height:100vh !important;
+    overflow:hidden !important;
+    background:#EDEEEA !important;
+  }
+
+  .desktop-topbar{
+    position:fixed !important;
+    top:26px !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    width:min(1480px, calc(100vw - 96px)) !important;
+    height:76px !important;
+    border-radius:16px 16px 0 0 !important;
+    background:#fff !important;
+    border:1px solid rgba(24,28,34,.10) !important;
+    box-shadow:0 16px 32px rgba(24,28,34,.08) !important;
+    z-index:1000 !important;
+  }
+
+  .market-ticker{
+    position:fixed !important;
+    top:102px !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    width:min(1480px, calc(100vw - 96px)) !important;
+    height:50px !important;
+    background:#fff !important;
+    border:1px solid rgba(24,28,34,.10) !important;
+    border-top:0 !important;
+    border-radius:0 0 0 0 !important;
+    box-shadow:0 12px 24px rgba(24,28,34,.06) !important;
+    z-index:999 !important;
+    overflow:hidden !important;
+  }
+
+  .market-ticker.hidden{display:none!important}
+
+  .ticker-inner{
+    height:50px !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:18px !important;
+    padding:0 24px !important;
+  }
+
+  .ticker-left{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:16px !important;
+    overflow:hidden !important;
+  }
+
+  .ticker-spark{
+    flex:0 0 30px !important;
+    width:30px !important;
+    height:30px !important;
+    border-radius:10px !important;
+    display:grid !important;
+    place-items:center !important;
+    background:#F4F5F1 !important;
+    color:#181C22 !important;
+    font-weight:900 !important;
+  }
+
+  .ticker-track{
+    min-width:0 !important;
+    flex:1 1 auto !important;
+    height:50px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:26px !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+  }
+
+  .ticker-track:empty::after{
+    content:'Carregando cotações...';
+    color:#6F7379;
+    font-weight:700;
+  }
+
+  .ticker-item{
+    display:inline-flex !important;
+    align-items:center !important;
+    gap:8px !important;
+    color:#181C22 !important;
+    font-size:14px !important;
+    font-weight:700 !important;
+    flex:0 0 auto !important;
+    padding-right:22px !important;
+    border-right:1px solid rgba(24,28,34,.12) !important;
+  }
+
+  .ticker-item strong{font-weight:900!important}
+  .ticker-item .positive{color:#16A34A!important}
+  .ticker-item .negative{color:#D92D3E!important}
+
+  .ticker-meta{
+    flex:0 0 auto !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:8px !important;
+    color:#6F7379 !important;
+    font-size:13px !important;
+    font-weight:800 !important;
+    white-space:nowrap !important;
+  }
+
+  .ticker-meta i{
+    width:7px!important;
+    height:7px!important;
+    border-radius:50%!important;
+    background:#16A34A!important;
+    display:block!important;
+  }
+
+  .screen{
+    position:absolute !important;
+    inset:0 !important;
+    height:100vh !important;
+    overflow:hidden !important;
+    background:#EDEEEA !important;
+  }
+
+  .screen:not(.active){display:none!important}
+  .screen.active{display:block!important}
+
+  .topbar.green,
+  .topbar.light{
+    display:none!important;
+  }
+
+  .screen > .content-area,
+  .screen > .secondary-content,
+  .content-area,
+  .secondary-content,
+  #screen-home .content-area.home-321-area{
+    height:100vh !important;
+    max-height:100vh !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    padding-top:188px !important;
+    padding-left:48px !important;
+    padding-right:48px !important;
+    padding-bottom:72px !important;
+    max-width:1280px !important;
+    margin:0 auto !important;
+    background:#EDEEEA !important;
+  }
+
+  .market-ticker.hidden ~ .screen .content-area,
+  .market-ticker.hidden ~ .screen .secondary-content{
+    padding-top:122px!important;
+  }
+
+  /* Barras internas que estavam desalinhadas */
+  .month-bar,
+  .tabs-bar{
+    position:static !important;
+    width:100% !important;
+    max-width:1180px !important;
+    margin:0 auto 18px !important;
+    border-radius:18px !important;
+    overflow:hidden !important;
+    border:1px solid rgba(24,28,34,.08) !important;
+    box-shadow:0 10px 24px rgba(24,28,34,.05) !important;
+    background:#fff !important;
+  }
+
+  .tabs-bar{
+    min-height:70px !important;
+    align-items:center !important;
+  }
+
+  .tab-option{
+    font-size:18px !important;
+    padding:22px 10px !important;
+  }
+
+  .tab-option.active{
+    background:#E7F63C !important;
+    color:#181C22 !important;
+    border-bottom:0 !important;
+  }
+
+  .month-item.current{
+    background:#F7F7F3 !important;
+    border:1px solid rgba(24,28,34,.12) !important;
+  }
+
+  .flow-layout,
+  .reports-area,
+  .secondary-content,
+  .day-list,
+  .simple-list,
+  .card-list{
+    max-width:1180px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+
+  .result-bar,
+  .result-bar.expected{
+    width:min(1180px, calc(100vw - 96px)) !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    bottom:0 !important;
+    border-radius:18px 18px 0 0 !important;
+    z-index:40 !important;
+  }
+
+  /* Configurações: cards sem corte */
+  #screen-settings .secondary-content{
+    display:grid !important;
+    grid-template-columns:repeat(2, minmax(320px, 1fr)) !important;
+    gap:18px !important;
+    align-content:start !important;
+  }
+
+  #screen-settings .section-card{
+    min-height:112px !important;
+    padding:22px !important;
+    overflow:visible !important;
+    margin:0 !important;
+  }
+
+  #screen-settings .toggle-card h2{
+    margin-bottom:16px !important;
+  }
+
+  #screen-settings .toggle-row{
+    min-height:48px !important;
+    padding:10px 0 !important;
+    gap:16px !important;
+  }
+
+  #screen-settings .switch{
+    flex:0 0 auto !important;
+    position:relative !important;
+    right:auto !important;
+    bottom:auto !important;
+  }
+
+  #screen-settings .radio-dot{
+    flex:0 0 auto !important;
+  }
+
+  .market-toolbar{
+    max-width:1180px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+
+  .market-grid{
+    max-width:1180px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+
+  .asset-dialog-card{
+    max-width:640px !important;
+  }
+}
+
+@media (min-width:900px) and (max-width:1180px){
+  .desktop-topbar,
+  .market-ticker{
+    width:calc(100vw - 42px)!important;
+  }
+
+  .screen > .content-area,
+  .screen > .secondary-content,
+  .content-area,
+  .secondary-content,
+  #screen-home .content-area.home-321-area{
+    padding-left:24px!important;
+    padding-right:24px!important;
+  }
+
+  #screen-settings .secondary-content{
+    grid-template-columns:1fr!important;
+  }
+}
+
+/* Garante que o modal de ativos aparece sobre tudo */
+#assetDialog{
+  z-index:5000;
+}
+
+#assetDialog::backdrop{
+  background:rgba(24,28,34,.38);
+}
