@@ -184,6 +184,7 @@ function groupTransactionsByDate(items){
 
 function updateMainNav(activeId){
   $$('.nav-item').forEach(btn => btn.classList.toggle('active', btn.dataset.openScreen === activeId));
+  $$('.desktop-links button').forEach(btn => btn.classList.toggle('active-nav', btn.dataset.openScreen === activeId));
 }
 
 function openScreen(id, push = true){
@@ -219,36 +220,14 @@ function renderHome(){
   const income = monthItems.filter(tx => tx.tipo === 'Receita').reduce((a,b)=>a + Number(b.valor || 0), 0);
   const expense = monthItems.filter(tx => tx.tipo === 'Despesa').reduce((a,b)=>a + Number(b.valor || 0), 0);
   const balance = computeHomeBalance();
-  const forecast = income - expense;
-  const cardsTotal = state.cards.reduce((acc, card) => acc + Number(card.fatura || 0), 0);
-  const monthLabel = getMonthNameByString(state.meta.currentMonth);
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Bom dia,' : hour < 18 ? 'Boa tarde,' : 'Boa noite,';
-  const hideText = state.meta.hideBalance ? 'Mostrar' : 'Ocultar';
 
-  const setText = (id, value) => {
-    const el = $(id);
-    if(el) el.textContent = value;
-  };
+  $('#homeTotalBalance').textContent = maybeHidden(balance);
+  $('#homeIncome').textContent = maybeHidden(income);
+  $('#homeExpense').textContent = maybeHidden(expense);
+  $('#homeForecast').textContent = maybeHidden(income - expense);
+  $('#btnToggleHideBalance').textContent = state.meta.hideBalance ? 'Mostrar' : 'Ocultar';
 
-  setText('#homeTotalBalance', maybeHidden(balance));
-  setText('#homeIncome', maybeHidden(income));
-  setText('#homeExpense', maybeHidden(expense));
-  setText('#homeForecast', maybeHidden(forecast));
-
-  setText('#homeTotalBalanceDesktop', maybeHidden(balance));
-  setText('#homeIncomeDesktop', maybeHidden(income));
-  setText('#homeExpenseDesktop', maybeHidden(expense));
-  setText('#homeCardsTotalDesktop', maybeHidden(cardsTotal));
-  setText('#homeIncomeDesktopSummary', maybeHidden(income));
-  setText('#homeExpenseDesktopSummary', maybeHidden(expense));
-  setText('#homeForecastDesktop', maybeHidden(forecast));
-  setText('#homeDesktopMonthLabel', monthLabel);
-  setText('#homeDesktopGreeting', greeting);
-
-  $$('[data-home-toggle-hide]').forEach(btn => btn.textContent = hideText);
-
-  const accountRows = activeAccounts().map(account => `
+  $('#homeAccountsList').innerHTML = activeAccounts().map(account => `
     <div class="account-row">
       <div class="row-left">
         <div class="logo-badge ${account.icon || 'default'}">${account.nome.slice(0,2).toLowerCase()}</div>
@@ -261,32 +240,12 @@ function renderHome(){
         <strong>${maybeHidden(account.saldo)}</strong>
         <span>saldo atual</span>
       </div>
-    </div>`).join('') || '<div class="empty-home-message">Nenhuma conta ativa.</div>';
+    </div>`).join('');
 
-  setText('#homeAccountsList', '');
-  const mobileAccounts = $('#homeAccountsList');
-  if(mobileAccounts) mobileAccounts.innerHTML = accountRows;
-
-  const desktopAccounts = activeAccounts().map(account => `
-    <div class="desktop-home-row">
-      <div class="row-left">
-        <div class="logo-badge ${account.icon || 'default'}">${account.nome.slice(0,2).toLowerCase()}</div>
-        <div>
-          <div class="row-title">${account.nome}</div>
-          <div class="row-sub">Conta manual</div>
-        </div>
-      </div>
-      <div class="row-right desktop-right-highlight">
-        <strong>${maybeHidden(account.saldo)}</strong>
-      </div>
-    </div>`).join('') || '<div class="empty-home-message">Nenhuma conta ativa.</div>';
-  const desktopAccountsEl = $('#homeAccountsListDesktop');
-  if(desktopAccountsEl) desktopAccountsEl.innerHTML = desktopAccounts;
-
-  const cardRows = state.cards.map(card => `
+  $('#homeCardsList').innerHTML = state.cards.map(card => `
     <div class="card-row">
       <div class="row-left">
-        <div class="logo-badge ${card.icon || 'default'}">${card.nome.slice(0,2).toLowerCase()}</div>
+        <div class="logo-badge ${card.icon || 'default'}">nu</div>
         <div>
           <div class="row-title">${card.nome}</div>
           <div class="row-sub">Fecha dia ${card.fecha} - Vence dia ${card.vence}</div>
@@ -296,51 +255,61 @@ function renderHome(){
         <strong>${maybeHidden(card.disponivel)}</strong>
         <span>disponível</span>
       </div>
-    </div>`).join('') || '<div class="empty-home-message">Nenhum cartão cadastrado.</div>';
-  const mobileCards = $('#homeCardsList');
-  if(mobileCards) mobileCards.innerHTML = cardRows;
+    </div>`).join('');
 
-  const desktopCards = state.cards.map(card => `
-    <div class="desktop-card-home-item">
-      <div class="desktop-card-home-top">
-        <div class="row-left">
-          <div class="logo-badge ${card.icon || 'default'}">${card.nome.slice(0,2).toLowerCase()}</div>
+  const currentMonthLabel = getMonthNameByString(state.meta.currentMonth);
+  const cardsTotal = state.cards.reduce((sum, card) => sum + Number(card.faturaAtual || 0), 0);
+
+  if ($('#desktopHelloName')) {
+    $('#desktopHelloName').textContent = 'Danilo & Isabella!';
+    $('#desktopMonthlyIncome').textContent = maybeHidden(income);
+    $('#desktopMonthlyExpense').textContent = maybeHidden(expense);
+    $('#desktopBalanceValue').textContent = maybeHidden(balance);
+    $('#desktopCardsHeaderLabel').textContent = `Faturas de ${currentMonthLabel}`;
+    $('#desktopCardsTotal').textContent = maybeHidden(cardsTotal);
+
+    const connections = [
+      ...activeAccounts().slice(0, 2).map(account => ({ nome: account.nome, icon: account.icon || 'default', plus: false })),
+      { plus: true }
+    ];
+
+    $('#desktopConnections').innerHTML = connections.map(item => item.plus
+      ? `<button class="desktop-connection-badge plus">＋</button>`
+      : `<button class="desktop-connection-badge ${item.icon}">${item.nome.slice(0,2).toLowerCase()}</button>`
+    ).join('');
+
+    $('#desktopAccountsList').innerHTML = activeAccounts().map(account => `
+      <div class="desktop-account-row">
+        <div class="desktop-account-left">
+          <div class="logo-badge ${account.icon || 'default'}">${account.nome.slice(0,2).toLowerCase()}</div>
           <div>
-            <div class="row-title">${card.nome}</div>
-            <div class="row-sub">Cartão manual</div>
+            <div class="desktop-row-title">${account.nome}</div>
+            <div class="desktop-row-sub">Conta manual</div>
           </div>
         </div>
-        <button class="desktop-invoice-button" data-open-screen="screen-cards">Ver fatura</button>
-      </div>
-      <div class="desktop-card-home-meta">
-        <div>
-          <span>Limite disponível</span>
-          <strong>${maybeHidden(card.disponivel)}</strong>
-        </div>
-        <div>
-          <span>Fatura atual</span>
-          <strong class="${Number(card.fatura || 0) > 0 ? 'negative' : ''}">${maybeHidden(card.fatura)}</strong>
-        </div>
-      </div>
-    </div>`).join('') || '<div class="empty-home-message">Nenhum cartão cadastrado.</div>';
-  const desktopCardsEl = $('#homeCardsListDesktop');
-  if(desktopCardsEl) desktopCardsEl.innerHTML = desktopCards;
+        <strong class="desktop-row-value">${maybeHidden(account.saldo)}</strong>
+      </div>`).join('');
 
-  const connectionsSource = [
-    ...activeAccounts().slice(0, 2).map(item => ({icon:item.icon || 'default', label:item.nome.slice(0,2).toLowerCase()})),
-    ...state.cards.slice(0, 1).map(item => ({icon:item.icon || 'default', label:item.nome.slice(0,2).toLowerCase()}))
-  ];
+    $('#desktopCardsList').innerHTML = state.cards.map(card => `
+      <div class="desktop-card-item">
+        <div class="desktop-card-top">
+          <div class="desktop-account-left">
+            <div class="logo-badge ${card.icon || 'default'}">${card.nome.slice(0,2).toLowerCase()}</div>
+            <div>
+              <div class="desktop-row-title">${card.nome}</div>
+              <div class="desktop-row-sub">Cartão manual</div>
+            </div>
+          </div>
+          <button class="desktop-view-btn" data-open-screen="screen-cards">Ver fatura</button>
+        </div>
+        <div class="desktop-card-summary">
+          <div><span>Limite Disponível</span><strong>${maybeHidden(card.disponivel)}</strong></div>
+          <div><span>Fatura atual</span><strong>${maybeHidden(card.faturaAtual)}</strong></div>
+        </div>
+      </div>`).join('');
 
-  const connectionsEl = $('#homeConnectionsDesktop');
-  if(connectionsEl){
-    connectionsEl.innerHTML = connectionsSource.map(item => `
-      <div class="desktop-connection-chip">
-        <div class="connection-logo logo-badge ${item.icon}">${item.label}</div>
-        <span class="connection-dot"></span>
-      </div>`).join('') + `
-      <div class="desktop-connection-chip add-chip">
-        <div class="connection-plus">+</div>
-      </div>`;
+
+    $$('#desktopCardsList [data-open-screen]').forEach(btn => btn.addEventListener('click', () => openScreen(btn.dataset.openScreen)));
   }
 }
 
@@ -654,7 +623,9 @@ function exportExcel(){
 // Navigation
 $$('[data-open-screen]').forEach(btn => btn.addEventListener('click', () => openScreen(btn.dataset.openScreen)));
 $$('[data-back]').forEach(btn => btn.addEventListener('click', goBack));
-$$('[data-home-toggle-hide]').forEach(btn => btn.addEventListener('click', toggleHide));
+$('#btnToggleHideBalance').addEventListener('click', toggleHide);
+if ($('#btnDesktopToggleHideBalance')) $('#btnDesktopToggleHideBalance').addEventListener('click', toggleHide);
+if ($('#btnDesktopToggleHideBalanceAlt')) $('#btnDesktopToggleHideBalanceAlt').addEventListener('click', toggleHide);
 $('#btnPrevMonth').addEventListener('click', () => { state.meta.currentMonth = shiftMonth(state.meta.currentMonth,-1); saveState(); renderFlow(); renderHome(); });
 $('#btnNextMonth').addEventListener('click', () => { state.meta.currentMonth = shiftMonth(state.meta.currentMonth,1); saveState(); renderFlow(); renderHome(); });
 $('#labelPrevMonth').addEventListener('click', () => { state.meta.currentMonth = shiftMonth(state.meta.currentMonth,-1); saveState(); renderFlow(); renderHome(); });

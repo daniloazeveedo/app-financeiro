@@ -55,10 +55,3 @@ Atualização 3.1.4:
   * Modo escuro
   * Modo claro
 - melhorado o layout das configurações no desktop.
-
-
-Atualização 3.1.4b:
-- tela inicial desktop redesenhada para ficar mais próxima da referência enviada;
-- mantidas as informações e configurações já existentes da versão 3.1.4;
-- corrigida a irregularidade dos cards na home do desktop;
-- versão mobile preservada.
