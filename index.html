@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Meu Controle 3.2.9</title>
-  <meta name="theme-color" content="#18b846" />
+  <title>Meu Controle 3.2.1</title>
+  <meta name="theme-color" content="#181C22" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Meu Controle" />
@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
@@ -22,7 +22,7 @@
     <div class="status-space"></div>
     <main class="app-screen">
       <nav class="desktop-topbar">
-        <div class="desktop-brand"><span class="brand-circle"></span><strong>organizze</strong></div>
+        <div class="desktop-brand geovea-brand"><span class="geovea-mark"><i></i><i></i></span><strong>meu controle</strong></div>
         <div class="desktop-links">
           <button data-open-screen="screen-home">visão geral</button>
           <button data-open-screen="screen-fluxo">lançamentos</button>
@@ -45,122 +45,140 @@
           <button class="icon-btn" data-open-screen="screen-settings">⚙</button>
         </header>
 
-        <div class="content-area with-nav">
-          <div class="desktop-home-layout">
-            <section class="desktop-home-hero">
-              <div class="desktop-home-hero-left">
-                <div class="desktop-greeting-block">
-                  <span class="desktop-greeting-small">Boa tarde,</span>
-                  <div class="desktop-greeting-line"><strong id="desktopHelloName">Danilo &amp; Isabella!</strong><span class="desktop-weather">☁️</span></div>
-                </div>
-                <div class="desktop-home-metrics">
-                  <div class="desktop-metric">
-                    <span>receita mensal</span>
-                    <strong class="positive" id="desktopMonthlyIncome">R$ 0,00</strong>
+        <div class="content-area with-nav home-321-area">
+          <div class="dashboard321">
+            <section class="dashboard321-hero card321">
+              <div class="hero321-left">
+                <div class="weather321">☁️</div>
+                <div class="hero321-content">
+                  <div class="hero321-greeting">Boa tarde, <strong id="desktopHelloName">Danilo &amp; Isabella</strong></div>
+                  <div class="hero321-metrics">
+                    <div class="hero321-metric">
+                      <span>receita mensal</span>
+                      <strong class="positive" id="desktopMonthlyIncome">R$ 0,00</strong>
+                    </div>
+                    <div class="hero321-separator"></div>
+                    <div class="hero321-metric">
+                      <span>despesa mensal</span>
+                      <strong class="negative" id="desktopMonthlyExpense">R$ 0,00</strong>
+                    </div>
+                    <button class="chart321-btn" data-open-screen="screen-reports" title="Ver gráfico">
+                      <span class="chart-bars321"><i></i><i></i><i></i></span>
+                      <small>ver gráfico</small>
+                    </button>
                   </div>
-                  <div class="desktop-metric">
-                    <span>despesa mensal</span>
-                    <strong class="negative" id="desktopMonthlyExpense">R$ 0,00</strong>
-                  </div>
-                  <button class="desktop-chart-btn" data-open-screen="screen-reports">↗</button>
                 </div>
               </div>
-              <div class="desktop-home-hero-right">
+
+              <div class="hero321-right">
                 <h3>Conexões ativas</h3>
-                <div id="desktopConnections" class="desktop-connections"></div>
-                <div class="desktop-connection-controls">
-                  <button class="desktop-arrow-btn">◀</button>
-                  <div class="desktop-dots"><span class="active"></span><span></span></div>
-                  <button class="desktop-arrow-btn">▶</button>
-                </div>
+                <div id="desktopConnections" class="connections321"></div>
               </div>
             </section>
 
-            <div class="desktop-home-columns">
-              <section class="desktop-dashboard-panel">
-                <div class="desktop-panel-head">
-                  <span class="desktop-head-accent"></span>
-                  <div class="desktop-panel-balance">
-                    <span>Saldo geral</span>
-                    <strong id="desktopBalanceValue">R$ 0,00</strong>
+            <div class="dashboard321-grid">
+              <section class="panel321 card321">
+                <div class="panel321-head">
+                  <div class="panel321-title-block">
+                    <span class="accent321"></span>
+                    <div>
+                      <span>Saldo geral</span>
+                      <strong id="desktopBalanceValue">R$ 0,00</strong>
+                    </div>
                   </div>
-                  <button id="btnDesktopToggleHideBalance" class="desktop-eye-btn" aria-label="Ocultar saldo">◉</button>
+                  <button id="btnDesktopToggleHideBalance" class="eye321-btn" title="Ocultar valores">◉</button>
                 </div>
-                <div class="desktop-panel-divider"></div>
-                <h3 class="desktop-panel-title">Minhas contas</h3>
-                <div id="desktopAccountsList" class="desktop-accounts-list"></div>
+
+                <div class="panel321-divider"></div>
+
+                <div class="panel321-title-row">
+                  <h2>Minhas contas</h2>
+                  <button class="view-all321" data-open-screen="screen-accounts">Ver todas ›</button>
+                </div>
+
+                <div id="desktopAccountsList" class="accounts321-list"></div>
               </section>
 
-              <section class="desktop-dashboard-panel">
-                <div class="desktop-panel-head">
-                  <span class="desktop-head-accent"></span>
-                  <div class="desktop-panel-balance">
-                    <span id="desktopCardsHeaderLabel">Faturas do mês</span>
-                    <strong id="desktopCardsTotal">R$ 0,00</strong>
+              <section class="panel321 card321">
+                <div class="panel321-head">
+                  <div class="panel321-title-block">
+                    <span class="accent321"></span>
+                    <div>
+                      <span id="desktopCardsHeaderLabel">Faturas de Abril</span>
+                      <strong id="desktopCardsTotal">R$ 0,00</strong>
+                    </div>
                   </div>
-                  <button id="btnDesktopToggleHideBalanceAlt" class="desktop-eye-btn" aria-label="Ocultar valores">◉</button>
+                  <button id="btnDesktopToggleHideBalanceAlt" class="eye321-btn" title="Ocultar valores">◉</button>
                 </div>
-                <div class="desktop-panel-divider"></div>
-                <h3 class="desktop-panel-title">Meus cartões</h3>
-                <div id="desktopCardsList" class="desktop-cards-list"></div>
+
+                <div class="panel321-divider"></div>
+
+                <div class="panel321-title-row">
+                  <h2>Meus cartões</h2>
+                  <button class="view-all321" data-open-screen="screen-cards">Ver todos ›</button>
+                </div>
+
+                <div id="desktopCardsList" class="cards321-list"></div>
               </section>
             </div>
           </div>
 
-          <div class="hero-card">
-            <div class="profile-mini">
-              <div class="avatar-ring"><div class="avatar-photo" id="homeAvatar">D&I</div></div>
-              <div>
-                <div class="hero-title" id="homeProfileName">Danilo &amp; Isabella</div>
-                <div class="hero-subtitle" id="homeProfileSubtitle">Seu controle financeiro estilo Organizze</div>
+          <div class="home-mobile-original">
+            <div class="hero-card">
+              <div class="profile-mini">
+                <div class="avatar-ring"><div class="avatar-photo" id="homeAvatar">D&amp;I</div></div>
+                <div>
+                  <div class="hero-title" id="homeProfileName">Danilo &amp; Isabella</div>
+                  <div class="hero-subtitle" id="homeProfileSubtitle">Seu controle financeiro estilo Organizze</div>
+                </div>
+              </div>
+              <div class="hero-balance">
+                <div>
+                  <span>Saldo geral</span>
+                  <strong id="homeTotalBalance">R$ 0,00</strong>
+                </div>
+                <button id="btnToggleHideBalance" class="pill-btn">Ocultar</button>
               </div>
             </div>
-            <div class="hero-balance">
-              <div>
-                <span>Saldo geral</span>
-                <strong id="homeTotalBalance">R$ 0,00</strong>
+
+            <div class="section-card">
+              <div class="section-title-row">
+                <h2>Resumo rápido</h2>
+                <button class="link-btn" data-open-screen="screen-fluxo">Ver fluxo</button>
               </div>
-              <button id="btnToggleHideBalance" class="pill-btn">Ocultar</button>
+              <div class="summary-grid">
+                <div><small>Entradas</small><strong class="positive" id="homeIncome">R$ 0,00</strong></div>
+                <div><small>Saídas</small><strong class="negative" id="homeExpense">R$ 0,00</strong></div>
+                <div><small>Saldo previsto</small><strong class="accent" id="homeForecast">R$ 0,00</strong></div>
+              </div>
             </div>
-          </div>
 
-          <div class="section-card">
-            <div class="section-title-row">
-              <h2>Resumo rápido</h2>
-              <button class="link-btn" data-open-screen="screen-fluxo">Ver fluxo</button>
+            <div class="section-card">
+              <div class="section-title-row">
+                <h2>Contas</h2>
+                <button class="link-btn" data-open-screen="screen-accounts">Gerenciar</button>
+              </div>
+              <div id="homeAccountsList" class="list-stack"></div>
             </div>
-            <div class="summary-grid">
-              <div><small>Entradas</small><strong class="positive" id="homeIncome">R$ 0,00</strong></div>
-              <div><small>Saídas</small><strong class="negative" id="homeExpense">R$ 0,00</strong></div>
-              <div><small>Saldo previsto</small><strong class="accent" id="homeForecast">R$ 0,00</strong></div>
-            </div>
-          </div>
 
-          <div class="section-card">
-            <div class="section-title-row">
-              <h2>Contas</h2>
-              <button class="link-btn" data-open-screen="screen-accounts">Gerenciar</button>
+            <div class="section-card">
+              <div class="section-title-row">
+                <h2>Cartões</h2>
+                <button class="link-btn" data-open-screen="screen-cards">Ver todos</button>
+              </div>
+              <div id="homeCardsList" class="list-stack"></div>
             </div>
-            <div id="homeAccountsList" class="list-stack"></div>
-          </div>
 
-          <div class="section-card">
-            <div class="section-title-row">
-              <h2>Cartões</h2>
-              <button class="link-btn" data-open-screen="screen-cards">Ver todos</button>
-            </div>
-            <div id="homeCardsList" class="list-stack"></div>
-          </div>
-
-          <div class="section-card">
-            <div class="section-title-row">
-              <h2>Acesso rápido</h2>
-            </div>
-            <div class="quick-actions">
-              <button class="quick-action" data-open-screen="screen-categories">Categorias</button>
-              <button class="quick-action" data-open-screen="screen-tags">Tags</button>
-              <button class="quick-action" data-open-screen="screen-profile">Perfil</button>
-              <button class="quick-action" data-open-screen="screen-help">Ajuda</button>
+            <div class="section-card">
+              <div class="section-title-row">
+                <h2>Acesso rápido</h2>
+              </div>
+              <div class="quick-actions">
+                <button class="quick-action" data-open-screen="screen-categories">Categorias</button>
+                <button class="quick-action" data-open-screen="screen-tags">Tags</button>
+                <button class="quick-action" data-open-screen="screen-profile">Perfil</button>
+                <button class="quick-action" data-open-screen="screen-help">Ajuda</button>
+              </div>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ const defaultState = {
     { id: crypto.randomUUID(), nome:'BB', saldo:0, status:'arquivada', icon:'bb' }
   ],
   cards: [
-    { id: crypto.randomUUID(), nome:'Nubank', fatura:0, disponivel:400, fecha:3, vence:10, icon:'nubank' }
+    { id: crypto.randomUUID(), nome:'Nubank', fatura:0, faturaAtual:0, disponivel:400, fecha:3, vence:10, icon:'nubank', final:'1234', bandeira:'VISA' }
   ],
   categories: [
     { id: crypto.randomUUID(), nome:'Alimentação', tipo:'Despesa', icon:'food' },
@@ -256,18 +256,9 @@ function inferBankIcon(name){
 }
 
 function bankLogoMarkup(icon, name, extraClass = ''){
-  const brand = {
-    nubank: { text: 'nu', labelClass: 'is-short' },
-    itau: { text: 'itaú', labelClass: 'is-word' },
-    bb: { text: 'BB', labelClass: 'is-short' },
-    santander: { text: 'Sant', labelClass: 'is-word' },
-    caixa: { text: 'CAIXA', labelClass: 'is-word' },
-    inter: { text: 'inter', labelClass: 'is-word' },
-    cofrinho: { text: 'co', labelClass: 'is-short' },
-    default: { text: initialsFromName(name), labelClass: 'is-short' }
-  }[icon || 'default'] || { text: initialsFromName(name), labelClass: 'is-short' };
-
-  return `<div class="logo-badge brand-${icon || 'default'} ${extraClass}" aria-label="${name}"><span class="brand-label ${brand.labelClass}">${brand.text}</span></div>`;
+  const normalized = icon || inferBankIcon(name);
+  const valid = ['nubank','cofrinho','itau','bb','santander','caixa','inter','default'].includes(normalized) ? normalized : 'default';
+  return `<div class="logo-badge brand-${valid} ${extraClass}" aria-label="${name}"><img src="assets/banks/${valid}.svg" alt="${name}" loading="lazy"></div>`;
 }
 
 function renderAvatar(el, profile){
@@ -321,49 +312,59 @@ function renderHome(){
   const income = monthItems.filter(tx => tx.tipo === 'Receita').reduce((a,b)=>a + Number(b.valor || 0), 0);
   const expense = monthItems.filter(tx => tx.tipo === 'Despesa').reduce((a,b)=>a + Number(b.valor || 0), 0);
   const balance = computeHomeBalance();
-
-  $('#homeTotalBalance').textContent = maybeHidden(balance);
-  $('#homeIncome').textContent = maybeHidden(income);
-  $('#homeExpense').textContent = maybeHidden(expense);
-  $('#homeForecast').textContent = maybeHidden(income - expense);
-  $('#btnToggleHideBalance').textContent = state.meta.hideBalance ? 'Mostrar' : 'Ocultar';
-
-  $('#homeAccountsList').innerHTML = activeAccounts().map(account => `
-    <div class="account-row">
-      <div class="row-left">
-        ${bankLogoMarkup(account.icon || inferBankIcon(account.nome), account.nome)}
-        <div>
-          <div class="row-title">${account.nome}</div>
-          <div class="row-sub">Conta manual</div>
-        </div>
-      </div>
-      <div class="row-right">
-        <strong>${maybeHidden(account.saldo)}</strong>
-        <span>saldo atual</span>
-      </div>
-    </div>`).join('');
-
-  $('#homeCardsList').innerHTML = state.cards.map(card => `
-    <div class="card-row">
-      <div class="row-left">
-        ${bankLogoMarkup(card.icon || inferBankIcon(card.nome), card.nome)}
-        <div>
-          <div class="row-title">${card.nome}</div>
-          <div class="row-sub">Fecha dia ${card.fecha} - Vence dia ${card.vence}</div>
-        </div>
-      </div>
-      <div class="row-right">
-        <strong>${maybeHidden(card.disponivel)}</strong>
-        <span>disponível</span>
-      </div>
-    </div>`).join('');
-
-  const currentMonthLabel = getMonthNameByString(state.meta.currentMonth);
   const cardsTotal = state.cards.reduce((sum, card) => sum + Number((card.faturaAtual ?? card.fatura) || 0), 0);
+  const currentMonthLabel = getMonthNameByString(state.meta.currentMonth);
+  const profile = getProfile();
+  const hideLabel = state.meta.hideBalance ? 'Mostrar' : 'Ocultar';
 
-  if ($('#desktopHelloName')) {
-    const profile = getProfile();
-    $('#desktopHelloName').textContent = `${profile.name}!`;
+  const setText = (selector, text) => { const el = $(selector); if(el) el.textContent = text; };
+
+  // Mobile/original layout
+  setText('#homeTotalBalance', maybeHidden(balance));
+  setText('#homeIncome', maybeHidden(income));
+  setText('#homeExpense', maybeHidden(expense));
+  setText('#homeForecast', maybeHidden(income - expense));
+  setText('#btnToggleHideBalance', hideLabel);
+
+  const mobileAccounts = $('#homeAccountsList');
+  if(mobileAccounts){
+    mobileAccounts.innerHTML = activeAccounts().map(account => `
+      <div class="account-row">
+        <div class="row-left">
+          ${bankLogoMarkup(account.icon || inferBankIcon(account.nome), account.nome)}
+          <div>
+            <div class="row-title">${account.nome}</div>
+            <div class="row-sub">Conta manual</div>
+          </div>
+        </div>
+        <div class="row-right">
+          <strong>${maybeHidden(account.saldo)}</strong>
+          <span>saldo atual</span>
+        </div>
+      </div>`).join('');
+  }
+
+  const mobileCards = $('#homeCardsList');
+  if(mobileCards){
+    mobileCards.innerHTML = state.cards.map(card => `
+      <div class="card-row">
+        <div class="row-left">
+          ${bankLogoMarkup(card.icon || inferBankIcon(card.nome), card.nome)}
+          <div>
+            <div class="row-title">${card.nome}</div>
+            <div class="row-sub">Fecha dia ${card.fecha} - Vence dia ${card.vence}</div>
+          </div>
+        </div>
+        <div class="row-right">
+          <strong>${maybeHidden(card.disponivel)}</strong>
+          <span>disponível</span>
+        </div>
+      </div>`).join('');
+  }
+
+  // Desktop 3.2.1 dashboard
+  if($('#desktopHelloName')){
+    $('#desktopHelloName').textContent = profile.name;
     $('#desktopMonthlyIncome').textContent = maybeHidden(income);
     $('#desktopMonthlyExpense').textContent = maybeHidden(expense);
     $('#desktopBalanceValue').textContent = maybeHidden(balance);
@@ -371,47 +372,62 @@ function renderHome(){
     $('#desktopCardsTotal').textContent = maybeHidden(cardsTotal);
 
     const connections = [
-      ...activeAccounts().slice(0, 2).map(account => ({ nome: account.nome, icon: account.icon || 'default', plus: false })),
+      ...activeAccounts().slice(0, 2).map(account => ({ nome: account.nome, icon: account.icon || inferBankIcon(account.nome), plus: false })),
       { plus: true }
     ];
-
     $('#desktopConnections').innerHTML = connections.map(item => item.plus
-      ? `<button class="desktop-connection-badge plus">＋</button>`
-      : `<button class="desktop-connection-badge has-logo">${bankLogoMarkup(item.icon || inferBankIcon(item.nome), item.nome, 'small-badge')}</button>`
+      ? `<button class="connection321-add" data-open-screen="screen-accounts"><span>＋</span><small>Adicionar<br>conexão</small></button>`
+      : `<div class="connection321-item">${bankLogoMarkup(item.icon, item.nome, 'connection321-logo')}<small>${item.nome}</small></div>`
     ).join('');
 
     $('#desktopAccountsList').innerHTML = activeAccounts().map(account => `
-      <div class="desktop-account-row">
-        <div class="desktop-account-left">
-          ${bankLogoMarkup(account.icon || inferBankIcon(account.nome), account.nome)}
+      <button class="account321-row" data-open-screen="screen-accounts">
+        <div class="account321-left">
+          ${bankLogoMarkup(account.icon || inferBankIcon(account.nome), account.nome, 'account321-logo')}
           <div>
-            <div class="desktop-row-title">${account.nome}</div>
-            <div class="desktop-row-sub">Conta manual</div>
+            <strong>${account.nome}</strong>
+            <span>${account.nome === 'Cofrinho' ? 'Conta poupança' : 'Conta corrente'}</span>
           </div>
         </div>
-        <strong class="desktop-row-value">${maybeHidden(account.saldo)}</strong>
-      </div>`).join('');
+        <div class="account321-right">
+          <strong>${maybeHidden(account.saldo)}</strong>
+          <span>›</span>
+        </div>
+      </button>
+    `).join('');
 
-    $('#desktopCardsList').innerHTML = state.cards.map(card => `
-      <div class="desktop-card-item">
-        <div class="desktop-card-top">
-          <div class="desktop-account-left">
-            <div class="logo-badge ${card.icon || 'default'}">${card.nome.slice(0,2).toLowerCase()}</div>
+    $('#desktopCardsList').innerHTML = state.cards.map((card, index) => {
+      const invoice = Number((card.faturaAtual ?? card.fatura) || 0);
+      const final = card.final || (index === 0 ? '1234' : '9876');
+      const cardName = card.nome === 'Nubank' ? 'Nubank Visa Platinum' : card.nome;
+      return `
+        <div class="card321-item">
+          <div class="card321-top">
+            <div class="credit321-thumb credit321-${inferBankIcon(card.nome)}">
+              ${bankLogoMarkup(card.icon || inferBankIcon(card.nome), card.nome, 'credit321-logo')}
+              <span>•••• ${final}</span>
+              <b>${card.bandeira || 'VISA'}</b>
+            </div>
+            <div class="card321-info">
+              <strong>${cardName}</strong>
+              <span>Final ${final}</span>
+            </div>
+            <button class="invoice321-btn" data-open-screen="screen-cards">Ver fatura</button>
+          </div>
+          <div class="card321-summary">
             <div>
-              <div class="desktop-row-title">${card.nome}</div>
-              <div class="desktop-row-sub">Cartão manual</div>
+              <span>Limite Disponível</span>
+              <strong>${maybeHidden(card.disponivel)}</strong>
+            </div>
+            <div>
+              <span>Fatura atual</span>
+              <strong class="${invoice > 0 ? 'negative' : ''}">${maybeHidden(invoice)}</strong>
             </div>
           </div>
-          <button class="desktop-view-btn" data-open-screen="screen-cards">Ver fatura</button>
-        </div>
-        <div class="desktop-card-summary">
-          <div><span>Limite Disponível</span><strong>${maybeHidden(card.disponivel)}</strong></div>
-          <div><span>Fatura atual</span><strong>${maybeHidden(card.faturaAtual ?? card.fatura)}</strong></div>
-        </div>
-      </div>`).join('');
+        </div>`;
+    }).join('');
 
-
-    $$('#desktopCardsList [data-open-screen]').forEach(btn => btn.addEventListener('click', () => openScreen(btn.dataset.openScreen)));
+    $$('#screen-home [data-open-screen]').forEach(btn => btn.onclick = () => openScreen(btn.dataset.openScreen));
   }
 }
 

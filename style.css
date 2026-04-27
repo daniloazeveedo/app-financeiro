@@ -1647,3 +1647,352 @@ body.theme-dark .cta-btn{
   background:var(--geovea-yellow)!important;
   color:var(--geovea-black)!important;
 }
+
+/* =========================================================
+   v3.2.1 — Dashboard desktop Geovea/Urbanist
+   ========================================================= */
+
+:root{
+  --geo-yellow:#E7F63C;
+  --geo-ink:#181C22;
+  --geo-gray:#D2D2D3;
+  --geo-white:#FFFFFF;
+  --geo-bg:#F4F5F1;
+  --geo-soft:#F8F8F4;
+  --geo-border:rgba(24,28,34,.10);
+  --geo-shadow:0 18px 38px rgba(24,28,34,.08);
+  --green:#15A34A;
+  --green-dark:#0D7F38;
+  --red:#D92D3E;
+  --blue:#1F5BFF;
+  --bg:var(--geo-bg);
+  --card:var(--geo-white);
+  --text:var(--geo-ink);
+  --text-soft:#6D7178;
+  --line:var(--geo-border);
+}
+
+html,body,button,input,select,dialog{
+  font-family:'Urbanist',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+}
+
+body{background:#EAEBE7;color:var(--geo-ink)}
+.phone-shell{background:var(--geo-bg)}
+.app-screen{background:var(--geo-bg)}
+
+.geovea-brand{gap:12px}
+.geovea-mark{display:flex;gap:5px;align-items:center}
+.geovea-mark i{display:block;width:13px;height:32px;border-radius:8px;background:var(--geo-yellow);transform:skew(-34deg)}
+.geovea-mark i:nth-child(2){height:24px;opacity:.9}
+.geovea-brand strong{font-weight:900;letter-spacing:-.04em;color:var(--geo-ink)}
+
+@media (min-width: 900px){
+  body{background:#EAEBE7}
+  .phone-shell{width:100vw;max-width:none;height:100vh;box-shadow:none;background:#EAEBE7}
+  .app-screen{height:100vh;padding-top:0;background:#EAEBE7}
+  .screen{top:0;background:#EAEBE7}
+  .screen.active{display:block}
+  .topbar{display:none!important}
+
+  .desktop-topbar{
+    display:flex!important;
+    position:fixed;
+    top:22px;left:50%;
+    transform:translateX(-50%);
+    width:min(1500px,calc(100vw - 64px));
+    height:86px;
+    z-index:40;
+    border-radius:20px 20px 0 0;
+    background:var(--geo-white)!important;
+    border:1px solid var(--geo-border);
+    box-shadow:0 10px 28px rgba(24,28,34,.06);
+    padding:0 32px;
+    color:var(--geo-ink)!important;
+    justify-content:space-between;
+  }
+  .desktop-brand{min-width:250px;font-size:28px;color:var(--geo-ink)!important}
+  .desktop-brand strong{font-size:29px}
+  .desktop-links{flex:1;justify-content:center;gap:42px;margin-left:0}
+  .desktop-links button{
+    color:var(--geo-ink)!important;
+    opacity:.88;
+    font-size:16px;
+    font-weight:700;
+    height:86px;
+    padding:0;
+    border-bottom:4px solid transparent;
+    border-radius:0;
+  }
+  .desktop-links button.active-nav{border-bottom-color:var(--geo-yellow);opacity:1}
+  .desktop-actions{min-width:210px;justify-content:flex-end;gap:20px}
+  .desktop-actions button{color:var(--geo-ink)!important;font-size:22px}
+  .desktop-avatar{
+    width:46px!important;height:46px!important;
+    background:#F1E0D9!important;color:var(--geo-ink)!important;
+    border:2px solid var(--geo-white);
+    box-shadow:0 4px 12px rgba(24,28,34,.12);
+  }
+
+  .market-ticker{
+    top:108px!important;
+    left:50%!important;
+    transform:translateX(-50%);
+    width:min(1500px,calc(100vw - 64px));
+    height:54px!important;
+    background:#FAFAF7!important;
+    border:1px solid var(--geo-border);
+    border-top:none;
+    box-shadow:0 8px 18px rgba(24,28,34,.04);
+    z-index:39;
+    color:var(--geo-ink);
+  }
+  .ticker-track{height:54px;display:flex;align-items:center;justify-content:center;gap:36px;font-size:15px}
+  .ticker-item{display:inline-flex;gap:8px;align-items:center;padding:0 10px;border-right:1px solid var(--geo-border)}
+  .ticker-item strong{font-weight:900}
+  .ticker-item .positive{color:var(--green-dark)!important}
+  .ticker-item .negative{color:var(--red)!important}
+
+  #screen-home .content-area.home-321-area{
+    height:100vh!important;
+    max-height:100vh!important;
+    overflow-y:auto;
+    overflow-x:hidden;
+    max-width:none!important;
+    margin:0!important;
+    padding:186px 32px 72px!important;
+    background:#EAEBE7;
+  }
+
+  .home-mobile-original{display:none!important}
+  .dashboard321{
+    width:min(1420px,calc(100vw - 96px));
+    margin:0 auto;
+    background:#F2F3EF;
+    border:1px solid rgba(24,28,34,.08);
+    border-radius:0 0 22px 22px;
+    padding:30px 42px 46px;
+    box-shadow:0 14px 40px rgba(24,28,34,.05);
+  }
+
+  .card321{
+    background:var(--geo-white);
+    border:1px solid var(--geo-border);
+    border-radius:18px;
+    box-shadow:var(--geo-shadow);
+  }
+
+  .dashboard321-hero{
+    display:grid;
+    grid-template-columns:minmax(0,1.35fr) minmax(360px,.85fr);
+    overflow:hidden;
+    min-height:210px;
+    margin-bottom:22px;
+  }
+
+  .hero321-left{
+    display:flex;
+    align-items:center;
+    gap:34px;
+    padding:34px 54px;
+  }
+  .weather321{
+    width:96px;height:96px;border-radius:50%;
+    display:grid;place-items:center;
+    background:rgba(231,246,60,.23);
+    color:var(--geo-ink);
+    font-size:44px;
+    flex:0 0 auto;
+  }
+  .hero321-content{flex:1;min-width:0}
+  .hero321-greeting{
+    font-size:31px;
+    line-height:1.1;
+    font-weight:700;
+    letter-spacing:-.045em;
+    color:var(--geo-ink);
+    margin-bottom:34px;
+  }
+  .hero321-greeting strong{font-weight:900}
+  .hero321-metrics{display:flex;align-items:center;gap:34px}
+  .hero321-metric span{display:block;color:#6C6F75;font-size:17px;margin-bottom:9px;font-weight:600}
+  .hero321-metric strong{font-size:31px;font-weight:800;letter-spacing:-.03em}
+  .hero321-separator{width:1px;height:58px;background:var(--geo-border)}
+  .chart321-btn{
+    margin-left:auto;
+    width:98px;height:98px;
+    border:1px solid var(--geo-border);
+    background:linear-gradient(180deg,#fff,#F6F6F2);
+    border-radius:14px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:var(--geo-ink);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.9);
+  }
+  .chart321-btn small{font-size:13px;font-weight:600;margin-top:8px}
+  .chart-bars321{height:48px;display:flex;align-items:end;gap:7px}
+  .chart-bars321 i{display:block;width:10px;background:var(--geo-ink);border-radius:2px}
+  .chart-bars321 i:nth-child(1){height:22px}
+  .chart-bars321 i:nth-child(2){height:36px}
+  .chart-bars321 i:nth-child(3){height:48px}
+
+  .hero321-right{
+    border-left:1px solid var(--geo-border);
+    padding:38px 58px;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .hero321-right h3{
+    font-size:22px;
+    letter-spacing:-.025em;
+    margin:0 0 32px;
+    color:var(--geo-ink);
+  }
+  .connections321{display:flex;align-items:flex-start;gap:28px}
+  .connection321-item{display:flex;flex-direction:column;align-items:center;gap:12px;color:#5F6369;font-size:14px;font-weight:600}
+  .connection321-logo{width:64px;height:64px;border-radius:12px;box-shadow:0 5px 14px rgba(24,28,34,.08)}
+  .connection321-add{
+    width:92px;height:92px;border-radius:18px;
+    border:1.5px dashed rgba(24,28,34,.30);
+    background:#fff;
+    color:var(--geo-ink);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  }
+  .connection321-add span{font-size:29px;line-height:1}
+  .connection321-add small{font-size:13px;color:#555;line-height:1.15}
+
+  .dashboard321-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1.07fr);
+    gap:26px;
+  }
+  .panel321{
+    min-height:500px;
+    padding:28px 36px 32px;
+  }
+  .panel321-head{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .panel321-title-block{display:flex;align-items:center;gap:16px}
+  .accent321{width:4px;height:46px;border-radius:999px;background:var(--green)}
+  .panel321-title-block span:not(.accent321){display:block;color:#6F7379;font-size:16px;font-weight:600}
+  .panel321-title-block strong{display:block;font-size:22px;color:var(--geo-ink);letter-spacing:-.02em;margin-top:3px}
+  .eye321-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#767A7F;background:#fff;font-size:16px}
+  .panel321-divider{height:1px;background:var(--geo-border);margin:25px 0 30px}
+  .panel321-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+  .panel321-title-row h2{font-size:22px;font-weight:900;letter-spacing:-.025em;color:var(--geo-ink)}
+  .view-all321{color:#5B5E64;font-size:15px;font-weight:700}
+
+  .accounts321-list{display:flex;flex-direction:column}
+  .account321-row{
+    width:100%;
+    display:flex;align-items:center;justify-content:space-between;gap:18px;
+    padding:16px 0;
+    border-bottom:1px solid var(--geo-border);
+    text-align:left;
+  }
+  .account321-left{display:flex;align-items:center;gap:18px;min-width:0}
+  .account321-logo{width:58px;height:58px;border-radius:12px}
+  .account321-left strong{display:block;font-size:17px;font-weight:800;color:var(--geo-ink);letter-spacing:-.015em}
+  .account321-left span{display:block;color:#6F7379;font-size:14px;margin-top:4px}
+  .account321-right{display:flex;align-items:center;gap:18px}
+  .account321-right strong{font-size:20px;font-weight:800;color:var(--geo-ink);white-space:nowrap}
+  .account321-right span{font-size:30px;color:#6C7075;font-weight:300}
+
+  .cards321-list{display:flex;flex-direction:column;gap:24px}
+  .card321-item{padding-bottom:24px;border-bottom:1px solid var(--geo-border)}
+  .card321-item:last-child{border-bottom:none}
+  .card321-top{display:grid;grid-template-columns:180px 1fr auto;gap:22px;align-items:center;margin-bottom:18px}
+  .credit321-thumb{
+    width:180px;height:82px;border-radius:9px;
+    padding:13px;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(135deg,#6E00B8,#B010F0);
+    box-shadow:0 8px 18px rgba(24,28,34,.10);
+  }
+  .credit321-nubank{background:linear-gradient(135deg,#6600A8,#A40ADE)}
+  .credit321-santander{background:linear-gradient(135deg,#15171B,#2C2F35)}
+  .credit321-inter{background:linear-gradient(135deg,#FF7A00,#FF9F1E)}
+  .credit321-logo{width:34px;height:34px;border-radius:7px;box-shadow:none}
+  .credit321-thumb span{position:absolute;left:13px;bottom:12px;font-size:12px;font-weight:700;letter-spacing:.05em}
+  .credit321-thumb b{position:absolute;right:13px;bottom:12px;font-size:12px}
+  .card321-info strong{display:block;font-size:17px;font-weight:900;color:var(--geo-ink)}
+  .card321-info span{display:block;color:#6D7178;font-size:14px;margin-top:5px}
+  .invoice321-btn{
+    padding:13px 24px;
+    border-radius:11px;
+    background:rgba(231,246,60,.30);
+    color:var(--geo-ink);
+    font-size:15px;
+    font-weight:800;
+  }
+  .card321-summary{
+    margin-left:202px;
+    display:grid;grid-template-columns:1fr 1fr;gap:20px;
+  }
+  .card321-summary div{
+    background:linear-gradient(180deg,#fff,#F5F5F2);
+    border:1px solid var(--geo-border);
+    border-radius:13px;
+    padding:16px 20px;
+    text-align:center;
+  }
+  .card321-summary span{display:block;color:#6D7178;font-size:14px;font-weight:600}
+  .card321-summary strong{display:block;margin-top:8px;font-size:17px;color:var(--geo-ink)}
+
+  .logo-badge{
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  .logo-badge img{
+    width:100%;height:100%;
+    display:block;
+    border-radius:inherit;
+    object-fit:contain;
+  }
+}
+
+@media (min-width:900px) and (max-width:1180px){
+  .dashboard321{width:min(100%,calc(100vw - 42px));padding:22px}
+  .dashboard321-hero,.dashboard321-grid{grid-template-columns:1fr}
+  .hero321-right{border-left:none;border-top:1px solid var(--geo-border)}
+  .card321-top{grid-template-columns:150px 1fr auto}
+  .credit321-thumb{width:150px}
+  .card321-summary{margin-left:172px}
+}
+
+@media (max-width:899px){
+  .dashboard321{display:none!important}
+  .home-mobile-original{display:block}
+  #screen-home .content-area.home-321-area{
+    height:calc(100% - 92px);
+    padding:18px;
+    padding-bottom:calc(var(--bottom-space) + 18px);
+  }
+  .market-ticker{display:none!important}
+}
+
+/* v3.2.1 dark mode support for new dashboard */
+body.theme-dark{
+  --geo-bg:#111418;
+  --geo-soft:#171B20;
+  --geo-border:rgba(255,255,255,.10);
+  --geo-shadow:0 18px 38px rgba(0,0,0,.28);
+}
+body.theme-dark .dashboard321,
+body.theme-dark #screen-home .content-area.home-321-area{background:#111418}
+body.theme-dark .card321,
+body.theme-dark .desktop-topbar,
+body.theme-dark .market-ticker{background:#181C22!important;color:#fff;border-color:rgba(255,255,255,.10)}
+body.theme-dark .desktop-links button,
+body.theme-dark .desktop-actions button,
+body.theme-dark .geovea-brand strong,
+body.theme-dark .hero321-greeting,
+body.theme-dark .hero321-right h3,
+body.theme-dark .panel321-title-row h2,
+body.theme-dark .account321-left strong,
+body.theme-dark .account321-right strong,
+body.theme-dark .card321-info strong,
+body.theme-dark .panel321-title-block strong,
+body.theme-dark .card321-summary strong{color:#fff!important}
+body.theme-dark .card321-summary div,
+body.theme-dark .chart321-btn{background:#20252C;border-color:rgba(255,255,255,.10)}
+body.theme-dark .invoice321-btn{background:rgba(231,246,60,.22);color:#fff}
+body.theme-dark .connection321-add{background:#20252C;color:#fff;border-color:rgba(255,255,255,.22)}

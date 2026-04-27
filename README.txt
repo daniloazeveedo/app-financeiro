@@ -62,3 +62,15 @@ Atualização 3.2.0:
 - paleta ajustada para a referência enviada: #E7F63C, #181C22, #D2D2D3 e #FFFFFF;
 - barra superior, botões, ticker de cotações, cards e página Mercado harmonizados com a nova identidade visual;
 - configurações, dados, perfil e funcionalidades anteriores preservados.
+
+
+Atualização 3.2.1:
+- home desktop refeita em formato dashboard profissional, baseada no mockup aprovado;
+- layout desktop e mobile separados;
+- barra de cotações preservada e integrada visualmente à nova paleta;
+- fonte Urbanist aplicada ao projeto;
+- paleta Geovea: #E7F63C, #181C22, #D2D2D3 e #FFFFFF;
+- pasta assets/banks criada com arquivos SVG de identidade visual dos bancos;
+- edição de perfil/foto e configurações anteriores preservadas;
+- cards de contas e cartões redesenhados na home desktop;
+- opção de ocultar valores mantida.
