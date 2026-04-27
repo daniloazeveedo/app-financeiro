@@ -55,3 +55,10 @@ Atualização 3.1.4:
   * Modo escuro
   * Modo claro
 - melhorado o layout das configurações no desktop.
+
+
+Atualização 3.2.0:
+- fonte Urbanist aplicada via Google Fonts;
+- paleta ajustada para a referência enviada: #E7F63C, #181C22, #D2D2D3 e #FFFFFF;
+- barra superior, botões, ticker de cotações, cards e página Mercado harmonizados com a nova identidade visual;
+- configurações, dados, perfil e funcionalidades anteriores preservados.

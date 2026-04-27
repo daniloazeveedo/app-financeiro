@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800;900&display=swap');
 :root{
   --green:#19c446;
   --green-dark:#0f8e31;
@@ -1372,3 +1373,277 @@ body{background:var(--geovea-bg)}
 .market-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}.market-card{background:#fff;border-radius:22px;padding:18px;box-shadow:var(--shadow);border:1px solid #eef1ed}.market-card span{display:block;color:var(--text-soft);font-size:13px;font-weight:700}.market-card strong{display:block;font-size:22px;margin-top:6px;letter-spacing:-.03em}.market-card small{display:block;margin-top:6px;font-weight:800}.news-list{display:grid;gap:12px}.news-item{display:grid;grid-template-columns:52px 1fr auto;gap:14px;align-items:center;padding:14px;border-radius:18px;background:#f7faf7}.news-icon{width:52px;height:52px;border-radius:18px;background:#10231c;color:#d8ffe7;display:grid;place-items:center;font-size:24px}.news-item h3{font-size:16px;line-height:1.25}.news-item p{color:var(--text-soft);font-size:13px;margin-top:4px}.news-tag{padding:8px 10px;border-radius:999px;background:#d8ffe7;color:#0c8f42;font-weight:800;font-size:12px;white-space:nowrap}
 @media (max-width:899px){.news-content{padding-top:18px}.market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.news-hero-card{border-radius:22px;padding:20px;align-items:flex-start}.news-hero-card h2{font-size:24px}.news-hero-badge{width:54px;height:54px;border-radius:18px;font-size:20px}.news-item{grid-template-columns:46px 1fr}.news-tag{grid-column:2}.news-icon{width:46px;height:46px;border-radius:15px}.ticker-track{animation:none;padding-left:16px}}
 body.theme-dark .market-card,body.theme-dark .news-card-list{background:var(--card)!important}body.theme-dark .news-item{background:#242a27}body.theme-dark .market-card{border-color:#303633}
+
+
+/* ===== Ajuste 3.2.0: paleta e fonte Geovea/Urbanist ===== */
+:root{
+  --geovea-yellow:#E7F63C;
+  --geovea-black:#181C22;
+  --geovea-gray:#D2D2D3;
+  --geovea-white:#FFFFFF;
+  --green:#E7F63C;
+  --green-dark:#181C22;
+  --red:#E25463;
+  --orange:#E7F63C;
+  --purple:#181C22;
+  --pink:#D2D2D3;
+  --mint:#E7F63C;
+  --blue:#181C22;
+  --blue-soft:#F3F4D0;
+  --text:#181C22;
+  --text-soft:#6E7174;
+  --line:#D2D2D3;
+  --bg:#F6F6F3;
+  --card:#FFFFFF;
+  --shadow:0 18px 45px rgba(24,28,34,.08);
+}
+
+html,body,button,input,select,dialog{
+  font-family:'Urbanist',-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Arial,sans-serif!important;
+  font-feature-settings:'ss01' 1;
+}
+
+body,
+.phone-shell,
+.screen{
+  background:var(--bg)!important;
+  color:var(--text);
+}
+
+/* Topo desktop e mobile na paleta Geovea */
+.desktop-topbar,
+.topbar.green{
+  background:var(--geovea-black)!important;
+  color:var(--geovea-white)!important;
+}
+
+.desktop-brand .brand-circle{
+  background:radial-gradient(circle at 62% 50%, var(--geovea-black) 0 38%, transparent 40%), var(--geovea-yellow)!important;
+}
+
+.desktop-brand strong{
+  color:var(--geovea-white)!important;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+
+.desktop-links button,
+.desktop-actions button{
+  color:var(--geovea-white)!important;
+  font-weight:700!important;
+}
+
+.desktop-links button.active-nav{
+  border-bottom-color:var(--geovea-yellow)!important;
+  color:var(--geovea-yellow)!important;
+}
+
+.desktop-avatar{
+  background:var(--geovea-yellow)!important;
+  color:var(--geovea-black)!important;
+}
+
+/* Cards e áreas principais */
+.hero-card,
+.section-card,
+.desktop-home-hero,
+.desktop-dashboard-panel,
+.report-card,
+.card-box,
+.profile-card,
+.empty-card,
+.market-card,
+.news-card-list,
+.sheet-card,
+.mobile-home-card,
+.desktop-home-card{
+  background:var(--geovea-white)!important;
+  border-color:rgba(210,210,211,.7)!important;
+  box-shadow:0 18px 45px rgba(24,28,34,.075)!important;
+}
+
+.summary-grid div,
+.quick-action,
+.desktop-card-summary,
+.market-card,
+.news-item,
+.filter-badge,
+.month-item.current,
+.segmented-control,
+.mobile-eye-btn{
+  background:#F3F3F0!important;
+}
+
+/* Botões, links e acentos */
+.pill-btn,
+.soft-green-btn,
+.desktop-view-btn,
+.desktop-eye-button,
+.desktop-invoice-button,
+.outline-green-btn,
+.primary-btn,
+.cta-btn,
+.plan-btn,
+.confirm-round,
+.link-btn,
+.link-green{
+  background:var(--geovea-yellow)!important;
+  color:var(--geovea-black)!important;
+  border-color:var(--geovea-yellow)!important;
+  font-weight:800!important;
+}
+
+.link-btn,
+.link-green{
+  background:transparent!important;
+  color:var(--geovea-black)!important;
+}
+
+.outline-green-btn{
+  background:var(--geovea-white)!important;
+  border:2px solid var(--geovea-black)!important;
+}
+
+.desktop-head-accent,
+.connection-dot,
+.desktop-dots span.active,
+.tab-option.active,
+.switch.on,
+.brand-circle{
+  background:var(--geovea-yellow)!important;
+}
+
+.tab-option.active{
+  color:var(--geovea-black)!important;
+  border-bottom-color:var(--geovea-yellow)!important;
+}
+
+.positive,
+.desktop-row-value,
+.row-right strong,
+.report-total strong{
+  color:var(--geovea-black)!important;
+}
+
+.negative{
+  color:var(--red)!important;
+}
+
+.accent,
+.desktop-balance-value,
+.desktop-metric strong,
+.mobile-big-value,
+.hero-balance strong{
+  color:var(--geovea-black)!important;
+}
+
+/* Ticker e página Mercado com a paleta do Behance */
+.market-ticker{
+  background:var(--geovea-black)!important;
+  color:var(--geovea-yellow)!important;
+  border-bottom:1px solid rgba(231,246,60,.2)!important;
+}
+
+.ticker-up,
+.ticker-flat{
+  color:var(--geovea-yellow)!important;
+}
+
+.news-hero-card{
+  background:linear-gradient(135deg,var(--geovea-black),#242A32)!important;
+  color:var(--geovea-white)!important;
+  box-shadow:0 28px 70px rgba(24,28,34,.22)!important;
+}
+
+.news-hero-card span,
+.news-hero-card p{
+  color:#F3F3D4!important;
+}
+
+.news-hero-badge,
+.news-icon,
+.news-tag{
+  background:var(--geovea-yellow)!important;
+  color:var(--geovea-black)!important;
+}
+
+.market-card{
+  border:1px solid rgba(210,210,211,.75)!important;
+}
+
+/* Controles e formulários */
+input,select{
+  border-color:var(--geovea-gray)!important;
+  color:var(--geovea-black)!important;
+  background:var(--geovea-white)!important;
+}
+
+.radio-dot{
+  border-color:#A9ABAD!important;
+}
+
+.toggle-row.radio.on .radio-dot{
+  border-color:var(--geovea-black)!important;
+  box-shadow:inset 0 0 0 8px var(--geovea-white), inset 0 0 0 16px var(--geovea-yellow)!important;
+}
+
+/* Logos e categorias continuam reconhecíveis, mas harmonizados */
+.logo-badge.brand-default{background:var(--geovea-gray)!important;color:var(--geovea-black)!important}
+.logo-badge.brand-cofrinho{background:var(--geovea-black)!important;color:var(--geovea-yellow)!important}
+.tx-icon.default,
+.category-badge.default{background:var(--geovea-black)!important;color:var(--geovea-yellow)!important}
+
+/* Tema escuro agora segue o preto da paleta */
+body.theme-dark{
+  --bg:#111419;
+  --card:#181C22;
+  --text:#FFFFFF;
+  --text-soft:#D2D2D3;
+  --line:#30343B;
+}
+
+body.theme-dark .hero-card,
+body.theme-dark .section-card,
+body.theme-dark .desktop-home-hero,
+body.theme-dark .desktop-dashboard-panel,
+body.theme-dark .report-card,
+body.theme-dark .card-box,
+body.theme-dark .profile-card,
+body.theme-dark .empty-card,
+body.theme-dark .market-card,
+body.theme-dark .sheet-card{
+  background:#181C22!important;
+  color:#FFFFFF!important;
+  border-color:#30343B!important;
+}
+
+body.theme-dark .summary-grid div,
+body.theme-dark .quick-action,
+body.theme-dark .desktop-card-summary,
+body.theme-dark .news-item,
+body.theme-dark .filter-badge,
+body.theme-dark .month-item.current,
+body.theme-dark .segmented-control{
+  background:#242A32!important;
+  color:#FFFFFF!important;
+}
+
+body.theme-dark .desktop-row-title,
+body.theme-dark .row-title,
+body.theme-dark h1,
+body.theme-dark h2,
+body.theme-dark h3,
+body.theme-dark .accent,
+body.theme-dark .positive,
+body.theme-dark .desktop-balance-value{
+  color:#FFFFFF!important;
+}
+
+body.theme-dark .pill-btn,
+body.theme-dark .soft-green-btn,
+body.theme-dark .desktop-view-btn,
+body.theme-dark .primary-btn,
+body.theme-dark .cta-btn{
+  background:var(--geovea-yellow)!important;
+  color:var(--geovea-black)!important;
+}
