@@ -46,3 +46,12 @@ Atualização 3.1.3:
 - desktop agora começa abaixo da barra verde;
 - ajustado grid da tela inicial para não cortar cards;
 - corrigida rolagem interna do conteúdo.
+
+
+Atualização 3.1.4:
+- corrigido corte no card de Resumo rápido;
+- ativada a troca de tema em Configurações:
+  * Usar do sistema
+  * Modo escuro
+  * Modo claro
+- melhorado o layout das configurações no desktop.

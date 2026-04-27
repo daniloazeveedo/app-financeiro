@@ -814,3 +814,168 @@ html, body {
     grid-column: span 2 !important;
   }
 }
+
+
+/* ===== Correção 3.1.4: cards + tema claro/escuro/sistema ===== */
+
+/* Evita corte de valores nos cards */
+.summary-grid {
+  width: 100%;
+  overflow: visible;
+}
+
+.summary-grid div {
+  min-width: 0;
+}
+
+.summary-grid strong {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#screen-home .section-card {
+  overflow: hidden;
+}
+
+/* Desktop: dá mais espaço para o resumo e impede corte do terceiro card */
+@media (min-width: 900px) {
+  #screen-home .section-card:nth-of-type(1) {
+    grid-column: span 2 !important;
+    min-width: 0;
+  }
+
+  #screen-home .section-card:nth-of-type(1) .summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #screen-home .section-card:nth-of-type(1) .summary-grid strong {
+    font-size: clamp(16px, 1.15vw, 20px);
+  }
+
+  #screen-home .content-area {
+    grid-template-columns: minmax(320px, .95fr) minmax(360px, 1.1fr) minmax(300px, .85fr);
+  }
+}
+
+/* Notebook menor: resumo ocupa linha toda */
+@media (min-width: 900px) and (max-width: 1199px) {
+  #screen-home .section-card:nth-of-type(1) {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* Tema claro explícito */
+body.theme-light {
+  --bg:#efefeb;
+  --card:#ffffff;
+  --text:#202020;
+  --text-soft:#707070;
+  --line:#e8e8e8;
+}
+
+/* Tema escuro */
+body.theme-dark {
+  --bg:#0d1110;
+  --card:#181c1a;
+  --text:#f5f5f5;
+  --text-soft:#b7b7b7;
+  --line:#303633;
+}
+
+body.theme-dark,
+body.theme-dark .phone-shell,
+body.theme-dark .screen {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.theme-dark .hero-card,
+body.theme-dark .section-card,
+body.theme-dark .report-card,
+body.theme-dark .profile-card,
+body.theme-dark .empty-card,
+body.theme-dark .card-box,
+body.theme-dark .feedback-card,
+body.theme-dark .help-card,
+body.theme-dark .simple-list,
+body.theme-dark .tx-row,
+body.theme-dark .result-bar,
+body.theme-dark .bottom-nav,
+body.theme-dark .sheet-card,
+body.theme-dark .month-bar,
+body.theme-dark .tabs-bar {
+  background: var(--card) !important;
+  color: var(--text);
+}
+
+body.theme-dark .summary-grid div,
+body.theme-dark .quick-action,
+body.theme-dark .soft-green-btn,
+body.theme-dark .filter-badge,
+body.theme-dark .segment,
+body.theme-dark .mode-preview,
+body.theme-dark .empty-illustration,
+body.theme-dark .round-action span,
+body.theme-dark .detail-fixed-pill,
+body.theme-dark .secondary-btn {
+  background:#242a27 !important;
+  color:var(--text);
+}
+
+body.theme-dark input,
+body.theme-dark select {
+  background:#111614;
+  color:var(--text);
+  border-color:#343a37;
+}
+
+body.theme-dark .row-sub,
+body.theme-dark .tx-meta span,
+body.theme-dark .tx-right span,
+body.theme-dark .item-subtitle,
+body.theme-dark .result-bar div span,
+body.theme-dark .toggle-row,
+body.theme-dark .empty-card p,
+body.theme-dark .feedback-card p,
+body.theme-dark .help-card p {
+  color:var(--text-soft);
+}
+
+body.theme-dark .row-button,
+body.theme-dark .toggle-row {
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--line);
+}
+
+body.theme-dark .desktop-topbar,
+body.theme-dark .topbar.green {
+  background:#0fa43a;
+}
+
+body.theme-dark .topbar.light {
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* Rádio de tema clicável */
+.toggle-row.radio {
+  cursor:pointer;
+}
+
+/* Melhor visual no desktop das configurações */
+@media (min-width: 900px) {
+  #screen-settings .secondary-content {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(320px, 1fr));
+    gap:18px;
+    align-content:start;
+  }
+
+  #screen-settings .section-card {
+    margin-bottom:0;
+  }
+}

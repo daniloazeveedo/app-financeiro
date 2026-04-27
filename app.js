@@ -805,7 +805,66 @@ window.addEventListener('keydown', event => {
   }
 });
 
+
+
+/* ===== Correção 3.1.4: alternância de tema ===== */
+function applyThemePreference(){
+  state.meta.theme = state.meta.theme || 'system';
+  document.body.classList.remove('theme-light','theme-dark');
+
+  let resolved = state.meta.theme;
+  if(resolved === 'system'){
+    resolved = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  document.body.classList.add(resolved === 'dark' ? 'theme-dark' : 'theme-light');
+
+  const visualRows = $$('.toggle-card .toggle-row.radio').filter(row => {
+    const text = row.textContent.trim();
+    return text.includes('Usar do sistema') || text.includes('Modo escuro') || text.includes('Modo claro');
+  });
+
+  visualRows.forEach(row => {
+    const text = row.textContent.trim();
+    const isOn =
+      (state.meta.theme === 'system' && text.includes('Usar do sistema')) ||
+      (state.meta.theme === 'dark' && text.includes('Modo escuro')) ||
+      (state.meta.theme === 'light' && text.includes('Modo claro'));
+    row.classList.toggle('on', isOn);
+  });
+}
+
+function bindThemeRows(){
+  const visualRows = $$('.toggle-card .toggle-row.radio').filter(row => {
+    const text = row.textContent.trim();
+    return text.includes('Usar do sistema') || text.includes('Modo escuro') || text.includes('Modo claro');
+  });
+
+  visualRows.forEach(row => {
+    row.addEventListener('click', () => {
+      const text = row.textContent.trim();
+      if(text.includes('Usar do sistema')) state.meta.theme = 'system';
+      if(text.includes('Modo escuro')) state.meta.theme = 'dark';
+      if(text.includes('Modo claro')) state.meta.theme = 'light';
+      saveState();
+      applyThemePreference();
+      renderAll();
+    });
+  });
+
+  if(window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if((state.meta.theme || 'system') === 'system'){
+        applyThemePreference();
+      }
+    });
+  }
+}
+
+
 // Init
+applyThemePreference();
+bindThemeRows();
 renderViewModeDialog();
 renderAll();
 openScreen('screen-home', false);
