@@ -3831,3 +3831,104 @@ body, html{
     display:none!important;
   }
 }
+
+/* =========================================================
+   v3.2.6 — correção final da rolagem da barra de cotações
+   ========================================================= */
+@media (min-width:900px){
+  .market-ticker{
+    background:#FFFFFF!important;
+    height:36px!important;
+    overflow:hidden!important;
+  }
+
+  .ticker-inner{
+    height:36px!important;
+    width:100%!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+    background:#FFFFFF!important;
+  }
+
+  .ticker-left{
+    height:36px!important;
+    flex:1 1 auto!important;
+    min-width:0!important;
+    overflow:hidden!important;
+    display:block!important;
+    background:#FFFFFF!important;
+  }
+
+  /* Remove o quadradinho/área de cor diferente na ponta esquerda */
+  .ticker-spark{
+    display:none!important;
+  }
+
+  .ticker-track{
+    height:36px!important;
+    width:max-content!important;
+    min-width:max-content!important;
+    max-width:none!important;
+    flex:0 0 auto!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    gap:0!important;
+    overflow:visible!important;
+    white-space:nowrap!important;
+    background:#FFFFFF!important;
+    animation:tickerMarquee326 24s linear infinite!important;
+    will-change:transform!important;
+    transform:translateX(0);
+  }
+
+  .ticker-track:hover{
+    animation-play-state:paused!important;
+  }
+
+  .ticker-track .ticker-item{
+    height:36px!important;
+    flex:0 0 auto!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    padding:0 20px!important;
+    border-right:1px solid rgba(47,71,63,.18)!important;
+    background:#FFFFFF!important;
+    color:#2F473F!important;
+    font-size:13px!important;
+    line-height:36px!important;
+    font-weight:750!important;
+  }
+
+  .ticker-track .ticker-item strong{
+    color:#2F473F!important;
+    font-weight:900!important;
+  }
+
+  .ticker-track .ticker-item .positive{
+    color:#008440!important;
+    font-weight:900!important;
+  }
+
+  .ticker-track .ticker-item .negative{
+    color:#D92D3E!important;
+    font-weight:900!important;
+  }
+
+  .ticker-meta{
+    height:36px!important;
+    flex:0 0 160px!important;
+    background:#FFFFFF!important;
+    border-left:1px solid rgba(47,71,63,.18)!important;
+    color:#2F473F!important;
+  }
+
+  @keyframes tickerMarquee326{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-50%); }
+  }
+}

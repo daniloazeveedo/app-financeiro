@@ -888,7 +888,7 @@ function paintMarket(data){
   lastMarketData = data && data.length ? data : getFallbackMarketData();
 
   if($('#tickerTrack')){
-    const tickerDataLoop = [...lastMarketData, ...lastMarketData, ...lastMarketData];
+    const tickerDataLoop = [...lastMarketData, ...lastMarketData, ...lastMarketData, ...lastMarketData, ...lastMarketData];
     $('#tickerTrack').innerHTML = tickerDataLoop.map(item => `<span class="ticker-item"><strong>${item.symbol}</strong><span>${currencyPrefix(item)} ${item.price}</span><span class="${tickerClass(item.change)}">${item.change}</span></span>`).join('');
   }
   renderTickerMeta();

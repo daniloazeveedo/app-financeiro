@@ -116,3 +116,11 @@ Atualização 3.2.5:
 - logo criado em CSS inspirado no símbolo verde enviado;
 - botão Adicionar ativo corrigido e modal preservado;
 - configurações e barras internas mantidas com correções de alinhamento.
+
+
+Atualização 3.2.6:
+- rolagem da barra de cotações acelerada;
+- corrigido o efeito em que a grade desaparecia no meio;
+- removida a área/quadradinho de cor diferente na ponta esquerda;
+- ticker agora duplica mais itens para manter a rolagem contínua;
+- mantida remoção da Brapi para evitar erro 401.
