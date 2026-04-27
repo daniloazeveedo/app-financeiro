@@ -979,3 +979,599 @@ body.theme-dark .topbar.light {
     margin-bottom:0;
   }
 }
+
+
+/* ===== Correção 3.1.5: mobile scroll + barra de valores ===== */
+
+/* Usa altura dinâmica do navegador mobile */
+@supports (height: 100dvh) {
+  .phone-shell {
+    height: 100dvh;
+  }
+}
+
+/* MOBILE: a página precisa rolar sem ficar presa */
+@media (max-width: 899px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .phone-shell {
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+  }
+
+  .app-screen {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .screen {
+    top: 0;
+    bottom: 78px;
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .content-area,
+  .secondary-content {
+    position: absolute;
+    top: 92px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 28px;
+  }
+
+  .content-area.with-nav {
+    padding-bottom: 28px;
+  }
+
+  /* A tela inicial agora rola até o final sem ficar presa atrás da nav */
+  #screen-home .content-area {
+    padding-bottom: 120px;
+  }
+
+  /* No fluxo, a lista ganha respiro para o resumo no final */
+  #screen-fluxo .content-area {
+    padding-bottom: 120px;
+  }
+
+  .day-list {
+    padding-bottom: 0;
+  }
+
+  /* Barra de valores deixa de ser fixa no mobile para não tampar lançamentos */
+  .result-bar {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: calc(100% + 36px) !important;
+    margin: 18px -18px 0;
+    z-index: 1;
+    box-shadow: 0 -8px 20px rgba(0,0,0,.05);
+  }
+
+  .result-bar.expected {
+    position: relative !important;
+    bottom: auto !important;
+    width: calc(100% + 36px) !important;
+    margin: 0 -18px 0;
+  }
+
+  /* Botão + fica acima da navegação, sem cobrir demais o resumo */
+  .fab {
+    bottom: 92px;
+    right: 24px;
+    left: auto;
+    transform: none;
+    margin-left: 0;
+    z-index: 15;
+  }
+
+  .bottom-nav {
+    position: absolute;
+    z-index: 20;
+  }
+
+  /* Quando o conteúdo for grande, evita que cards fiquem cortados */
+  .hero-card,
+  .section-card,
+  .report-card,
+  .card-box {
+    flex-shrink: 0;
+  }
+}
+
+/* Desktop permanece com resumo fixo embaixo */
+@media (min-width: 900px) {
+  .result-bar {
+    position: fixed;
+  }
+}
+
+
+
+/* ===== Home adaptativa 3.1.6 ===== */
+
+#screen-home > .topbar{
+  display:none !important;
+}
+
+#screen-home .content-area.home-adaptive{
+  height:100%;
+  max-width:none;
+  margin:0;
+  padding:0;
+  overflow:auto;
+}
+
+.home-desktop-layout{
+  display:none;
+}
+
+.home-mobile-layout{
+  display:block;
+}
+
+.mobile-home-hero{
+  background:var(--green);
+  color:#fff;
+  padding:18px 18px 108px;
+}
+
+.mobile-home-hero-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-top:20px;
+}
+
+.mobile-user-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.mobile-user-box span{
+  display:block;
+  font-size:15px;
+  opacity:.95;
+  margin-bottom:4px;
+}
+
+.mobile-user-box strong{
+  display:block;
+  font-size:18px;
+  font-weight:800;
+}
+
+.mobile-avatar-photo{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:#e8d6d6;
+  display:grid;
+  place-items:center;
+  color:#234;
+  font-weight:800;
+  box-shadow:0 0 0 3px rgba(255,255,255,.35);
+}
+
+.mobile-bell-btn{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  background:rgba(0,0,0,.18);
+  color:#fff;
+  font-size:20px;
+}
+
+.mobile-home-stack{
+  margin-top:-88px;
+  padding:0 16px calc(var(--bottom-space) + 18px);
+  position:relative;
+  z-index:2;
+}
+
+.mobile-home-card{
+  background:#fff;
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  padding:18px;
+  margin-bottom:16px;
+}
+
+.mobile-card-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:14px;
+}
+
+.mobile-big-value{
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-.03em;
+  margin-top:4px;
+}
+
+.mobile-eye-btn{
+  width:40px;
+  height:40px;
+  border-radius:999px;
+  background:#f1f1ef;
+  color:#666;
+  font-size:18px;
+}
+
+.mobile-home-list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin-bottom:16px;
+}
+
+.mobile-account-row,
+.mobile-card-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.mobile-account-row .left,
+.mobile-card-item .left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.mobile-account-row .name,
+.mobile-card-item .name{
+  font-size:16px;
+  font-weight:700;
+}
+
+.mobile-account-row .value,
+.mobile-card-item .value{
+  font-size:15px;
+  font-weight:800;
+}
+
+.outline-green-btn{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:2px solid rgba(25,196,70,.7);
+  color:var(--green-dark);
+  font-weight:800;
+  background:#fff;
+}
+
+.desktop-hero-wide,
+.desktop-home-grid{
+  max-width:1180px;
+  margin:0 auto;
+}
+
+.desktop-hero-wide{
+  display:grid;
+  grid-template-columns:1.7fr 1fr;
+  gap:0;
+  background:#fff;
+  border-radius:26px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  margin-top:18px;
+}
+
+.desktop-hero-left{
+  padding:28px 32px;
+}
+
+.desktop-greeting{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:26px;
+}
+
+.desktop-greeting-text span{
+  display:block;
+  font-size:18px;
+  color:#4b4b4b;
+  margin-bottom:4px;
+}
+
+.desktop-greeting-text strong{
+  display:block;
+  font-size:28px;
+  font-weight:800;
+}
+
+.desktop-metrics{
+  display:flex;
+  align-items:center;
+  gap:26px;
+}
+
+.desktop-metric span{
+  display:block;
+  color:var(--text-soft);
+  margin-bottom:6px;
+  font-size:15px;
+}
+
+.desktop-metric strong{
+  display:block;
+  font-size:20px;
+  font-weight:800;
+}
+
+.desktop-divider{
+  width:1px;
+  height:52px;
+  background:var(--line);
+}
+
+.desktop-chart-btn{
+  margin-left:auto;
+  width:48px;
+  height:48px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:#fafaf8;
+  color:#444;
+  font-size:24px;
+}
+
+.desktop-hero-right{
+  border-left:1px solid var(--line);
+  padding:26px 28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.desktop-connections-title{
+  font-size:16px;
+  font-weight:800;
+  margin-bottom:18px;
+}
+
+.desktop-connections-list{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.connection-chip{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  min-width:66px;
+}
+
+.connection-icon{
+  width:58px;
+  height:58px;
+  border-radius:16px;
+  background:#fff;
+  border:1px solid var(--line);
+  display:grid;
+  place-items:center;
+  font-weight:800;
+}
+
+.connection-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:var(--green);
+}
+
+.desktop-home-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  padding:20px 0 120px;
+}
+
+.desktop-home-card{
+  background:#fff;
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:22px 24px;
+}
+
+.desktop-home-card-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:18px;
+}
+
+.desktop-label{
+  font-size:14px;
+  color:var(--text-soft);
+}
+
+.desktop-big-value{
+  margin-top:6px;
+  font-size:20px;
+  font-weight:800;
+}
+
+.eye-pill{
+  padding:10px 14px;
+  border-radius:999px;
+  background:#ecf9ef;
+  color:var(--green-dark);
+  font-weight:800;
+}
+
+.desktop-card-section-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:12px;
+}
+
+.desktop-list{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+
+.desktop-account-row,
+.desktop-card-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:16px 0;
+  border-top:1px solid var(--line);
+}
+
+.desktop-account-row:first-child,
+.desktop-card-item:first-child{
+  border-top:0;
+  padding-top:6px;
+}
+
+.desktop-account-row .left,
+.desktop-card-item .left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-width:0;
+  flex:1;
+}
+
+.desktop-account-row .name,
+.desktop-card-item .name{
+  font-size:17px;
+  font-weight:700;
+}
+
+.desktop-account-row .sub,
+.desktop-card-item .sub{
+  font-size:14px;
+  color:var(--text-soft);
+  margin-top:4px;
+}
+
+.desktop-account-row .value{
+  font-size:18px;
+  font-weight:800;
+  color:var(--blue);
+  white-space:nowrap;
+}
+
+.desktop-card-item{
+  align-items:flex-start;
+}
+
+.desktop-card-item .right{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.desktop-card-meta{
+  display:flex;
+  gap:24px;
+  background:#f7f7f5;
+  border-radius:18px;
+  padding:14px 16px;
+}
+
+.desktop-card-meta div span{
+  display:block;
+  font-size:13px;
+  color:var(--text-soft);
+  margin-bottom:4px;
+}
+
+.desktop-card-meta div strong{
+  font-size:16px;
+  font-weight:800;
+  color:#222;
+  white-space:nowrap;
+}
+
+.soft-green-btn{
+  padding:10px 16px;
+  border-radius:12px;
+  background:#dff7e4;
+  color:var(--green-dark);
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.home-empty{
+  padding:10px 0;
+  color:var(--text-soft);
+}
+
+@media (max-width: 899px){
+  .desktop-topbar{
+    display:none !important;
+  }
+}
+
+@media (min-width: 900px){
+  #screen-home .content-area.home-adaptive{
+    padding:18px 32px 120px;
+    max-width:none;
+  }
+
+  .home-mobile-layout{
+    display:none;
+  }
+
+  .home-desktop-layout{
+    display:block;
+  }
+
+  .desktop-home-grid{
+    padding-bottom:40px;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1160px){
+  .desktop-hero-wide{
+    grid-template-columns:1fr;
+  }
+
+  .desktop-hero-right{
+    border-left:0;
+    border-top:1px solid var(--line);
+  }
+
+  .desktop-home-grid{
+    grid-template-columns:1fr;
+  }
+}
