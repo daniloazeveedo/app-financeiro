@@ -723,6 +723,19 @@ $('#btnToggleExpected').addEventListener('click', () => {
   $('#btnToggleExpected').textContent = $('#flowExpectedBar').classList.contains('collapsed') ? '⌃' : '⌄';
 });
 
+
+const closeTxDetailBtn = $('#btnCloseTransactionDetail');
+if(closeTxDetailBtn){
+  closeTxDetailBtn.addEventListener('click', () => $('#transactionDetailDialog').close());
+}
+
+// Fecha qualquer painel/modal ao clicar na área escura fora do card
+$$('dialog').forEach(dialog => {
+  dialog.addEventListener('click', event => {
+    if(event.target === dialog) dialog.close();
+  });
+});
+
 // Detail dialog actions
 $('#btnEditTransaction').addEventListener('click', () => {
   const tx = state.transactions.find(item => item.id === selectedTransactionId);

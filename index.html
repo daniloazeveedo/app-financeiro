@@ -18,6 +18,21 @@
   <div class="phone-shell">
     <div class="status-space"></div>
     <main class="app-screen">
+      <nav class="desktop-topbar">
+        <div class="desktop-brand"><span class="brand-circle"></span><strong>meu controle</strong></div>
+        <div class="desktop-links">
+          <button data-open-screen="screen-home">visão geral</button>
+          <button data-open-screen="screen-fluxo">lançamentos</button>
+          <button data-open-screen="screen-reports">relatórios</button>
+          <button data-open-screen="screen-categories">limite de gastos</button>
+          <button data-open-screen="screen-profile">configurações</button>
+        </div>
+        <div class="desktop-actions">
+          <button data-open-screen="screen-settings">⚙</button>
+          <button>🔔</button>
+          <button class="desktop-avatar">D</button>
+        </div>
+      </nav>
       <section class="screen active" id="screen-home">
         <header class="topbar light">
           <div class="topbar-side"></div>
@@ -428,6 +443,7 @@
 
   <dialog class="sheet-dialog" id="transactionDetailDialog">
     <div class="sheet-card detail-sheet">
+      <button type="button" class="detail-close-btn" id="btnCloseTransactionDetail">×</button>
       <div class="sheet-handle"></div>
       <div class="detail-main">
         <div class="detail-icon" id="detailCategoryIcon">%</div>

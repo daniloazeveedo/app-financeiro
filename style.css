@@ -443,3 +443,284 @@ html, body {
     font-size: 22px;
   }
 }
+
+
+/* ===== Correção desktop real 3.1.2 ===== */
+.desktop-topbar {
+  display: none;
+}
+
+.detail-close-btn {
+  position: absolute;
+  right: 18px;
+  top: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: #f2f2f2;
+  color: #555;
+  font-size: 30px;
+  line-height: 1;
+  z-index: 2;
+}
+
+.detail-sheet {
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  body {
+    display: block;
+    background: #f2f3f2;
+    overflow-x: hidden;
+  }
+
+  .phone-shell {
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    box-shadow: none;
+    background: var(--bg);
+  }
+
+  .app-screen {
+    height: calc(100vh - 78px);
+    padding-top: 58px;
+  }
+
+  .desktop-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 34px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 58px;
+    background: #14bf45;
+    color: #fff;
+    z-index: 30;
+    padding: 0 28px;
+  }
+
+  .desktop-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 22px;
+    min-width: 210px;
+  }
+
+  .brand-circle {
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    border-radius: 50%;
+    background: radial-gradient(circle at 65% 50%, #fff 0 38%, transparent 40%), rgba(255,255,255,.65);
+  }
+
+  .desktop-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .desktop-links button,
+  .desktop-actions button {
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  .desktop-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    min-width: 210px;
+  }
+
+  .desktop-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50%;
+    background: #e8d6d6 !important;
+    color: #1d1d1d !important;
+    font-weight: 800 !important;
+  }
+
+  .screen {
+    background: var(--bg);
+  }
+
+  .topbar.green,
+  .topbar.light {
+    display: none;
+  }
+
+  .content-area,
+  .secondary-content {
+    height: calc(100vh - 136px);
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 26px 32px 120px;
+  }
+
+  .content-area.with-nav {
+    padding-bottom: 120px;
+  }
+
+  #screen-home .content-area {
+    display: grid;
+    grid-template-columns: minmax(360px, 1fr) minmax(360px, 1fr) minmax(320px, .85fr);
+    gap: 20px;
+    align-content: start;
+  }
+
+  #screen-home .hero-card {
+    grid-column: span 1;
+  }
+
+  #screen-home .section-card {
+    margin-bottom: 0;
+  }
+
+  #screen-home .section-card:nth-of-type(2) {
+    grid-column: span 2;
+  }
+
+  .hero-card,
+  .section-card,
+  .report-card,
+  .empty-card,
+  .card-box {
+    border-radius: 18px;
+  }
+
+  .month-bar {
+    height: 64px;
+    max-width: none;
+    padding-left: calc((100vw - min(1220px, 100vw)) / 2 + 32px);
+    padding-right: calc((100vw - min(1220px, 100vw)) / 2 + 32px);
+  }
+
+  .day-list {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .tx-row {
+    border-radius: 18px;
+  }
+
+  .result-bar {
+    bottom: 0;
+    width: 100vw;
+    max-width: none;
+    left: 0;
+    transform: none;
+    padding-left: calc((100vw - min(1220px, 100vw)) / 2 + 32px);
+    padding-right: calc((100vw - min(1220px, 100vw)) / 2 + 32px);
+  }
+
+  .result-bar.expected {
+    bottom: 63px;
+    width: 100vw;
+    max-width: none;
+    left: 0;
+    transform: none;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
+  .fab {
+    right: 34px;
+    left: auto;
+    bottom: 82px;
+    transform: none;
+    margin-left: 0;
+  }
+
+  .sheet-dialog {
+    max-width: none;
+    width: 100vw;
+    left: 0;
+    transform: none;
+  }
+
+  .sheet-card {
+    max-width: 520px;
+    margin: 0 auto;
+    border-radius: 26px 26px 0 0;
+  }
+
+  .detail-sheet {
+    max-width: 520px;
+  }
+
+  .reports-area {
+    max-width: 1180px;
+  }
+
+  #reportTabCategorias.active {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+
+  .report-card.big-card {
+    margin-bottom: 0;
+  }
+
+  .secondary-content {
+    max-width: 1050px;
+  }
+
+  #screen-accounts .card-list,
+  #screen-cards .card-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(320px, 1fr));
+    gap: 18px;
+  }
+
+  .simple-list {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-btn {
+    max-width: 760px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Notebook médio */
+@media (min-width: 900px) and (max-width: 1120px) {
+  .desktop-links {
+    gap: 14px;
+  }
+
+  .desktop-links button {
+    font-size: 14px;
+  }
+
+  #screen-home .content-area {
+    grid-template-columns: repeat(2, minmax(320px, 1fr));
+  }
+}
+
+/* Correção extra para celular estreito */
+@media (max-width: 899px) {
+  .desktop-topbar {
+    display: none !important;
+  }
+}

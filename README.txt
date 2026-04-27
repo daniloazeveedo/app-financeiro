@@ -31,3 +31,11 @@ Atualização 3.1.1:
 - app agora expande melhor em telas grandes;
 - reduzida a chance de rolagem horizontal;
 - cards da tela inicial se organizam em colunas no desktop.
+
+
+Atualização 3.1.2:
+- desktop agora usa barra superior horizontal no estilo web;
+- layout ocupa a largura da tela do usuário no PC;
+- menu inferior fica só no mobile;
+- painel de detalhes da transação ganhou botão X;
+- clicar fora do painel também fecha a transação/modal.
