@@ -1311,3 +1311,29 @@ body.theme-dark .topbar.light {
     border-top:1px solid #ececec;
   }
 }
+
+/* ===== Ajustes 3.1.8: perfil + logos oficiais ===== */
+.profile-subtitle{margin:6px 0 18px;color:var(--text-soft);font-size:16px;line-height:1.4}
+.profile-photo-editor{display:grid;gap:12px;justify-items:center;margin-bottom:8px}
+.upload-avatar-btn{display:inline-flex;align-items:center;justify-content:center;text-align:center}
+.avatar-inner-img,.avatar-img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
+.avatar-photo.has-image,.avatar-large.has-image{padding:0;overflow:hidden;color:transparent}
+#desktopAvatarButton{overflow:hidden;padding:0}
+#desktopAvatarButton .avatar-img{border-radius:50%}
+.logo-badge{overflow:hidden;position:relative}
+.brand-label{display:block;font-weight:900;letter-spacing:-0.03em;line-height:1;text-transform:none}
+.brand-label.is-short{font-size:22px}
+.brand-label.is-word{font-size:14px}
+.logo-badge.brand-default{background:#d7d7d7;color:#3b3b3b}
+.logo-badge.brand-nubank{background:#820ad1;color:#fff}
+.logo-badge.brand-itau{background:#ff7a00;color:#fff;box-shadow:inset 0 0 0 3px #1f4db8}
+.logo-badge.brand-bb{background:#ffda21;color:#103e96}
+.logo-badge.brand-santander{background:#ec0000;color:#fff}
+.logo-badge.brand-caixa{background:#005ca9;color:#fff}
+.logo-badge.brand-inter{background:#ff7a00;color:#fff}
+.logo-badge.brand-cofrinho{background:linear-gradient(180deg,#5a149d,#320b60);color:#fff}
+.small-badge{width:42px;height:42px;border-radius:14px}
+.small-badge .brand-label.is-short{font-size:18px}
+.small-badge .brand-label.is-word{font-size:11px}
+.desktop-connection-badge.has-logo{padding:0;background:transparent;border:0;box-shadow:none;width:auto;height:auto}
+.desktop-connection-badge.has-logo .logo-badge{box-shadow:0 2px 8px rgba(0,0,0,.08)}

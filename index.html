@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Meu Controle 3.1</title>
+  <title>Meu Controle 3.1.8</title>
   <meta name="theme-color" content="#18b846" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -30,7 +30,7 @@
         <div class="desktop-actions">
           <button data-open-screen="screen-settings">⚙</button>
           <button>🔔</button>
-          <button class="desktop-avatar">D</button>
+          <button class="desktop-avatar" id="desktopAvatarButton"><span id="desktopAvatarText">D</span><img id="desktopAvatarImage" class="avatar-img hidden" alt="Foto do perfil"></button>
         </div>
       </nav>
       <section class="screen active" id="screen-home">
@@ -104,10 +104,10 @@
 
           <div class="hero-card">
             <div class="profile-mini">
-              <div class="avatar-ring"><div class="avatar-photo">D&I</div></div>
+              <div class="avatar-ring"><div class="avatar-photo" id="homeAvatar">D&I</div></div>
               <div>
-                <div class="hero-title">Danilo &amp; Isabella</div>
-                <div class="hero-subtitle">Seu controle financeiro estilo Organizze</div>
+                <div class="hero-title" id="homeProfileName">Danilo &amp; Isabella</div>
+                <div class="hero-subtitle" id="homeProfileSubtitle">Seu controle financeiro estilo Organizze</div>
               </div>
             </div>
             <div class="hero-balance">
@@ -305,9 +305,10 @@
         </header>
         <div class="content-area with-nav">
           <div class="profile-card">
-            <div class="avatar-large">D&amp;I</div>
-            <h2>Danilo &amp; Isabella</h2>
-            <button class="soft-green-btn">Editar perfil</button>
+            <div class="avatar-large" id="profileAvatar">D&amp;I</div>
+            <h2 id="profileName">Danilo &amp; Isabella</h2>
+            <p class="profile-subtitle" id="profileSubtitle">Seu controle financeiro estilo Organizze</p>
+            <button class="soft-green-btn" id="btnOpenEditProfile">Editar perfil</button>
           </div>
 
           <div class="section-card clickable-stack">
@@ -680,5 +681,23 @@
       window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(console.warn));
     }
   </script>
+<dialog class="sheet-dialog" id="profileFormDialog">
+  <form class="sheet-card form-sheet" id="profileForm">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head"><h2>Editar perfil</h2><button type="button" class="icon-btn close-sheet" data-close-dialog="profileFormDialog">✕</button></div>
+    <div class="profile-photo-editor">
+      <div class="avatar-large preview" id="profilePreviewAvatar">D&amp;I</div>
+      <label class="primary-btn upload-avatar-btn">Escolher foto<input type="file" id="profilePhotoInput" accept="image/*" hidden></label>
+      <button type="button" class="secondary-btn" id="btnRemoveProfilePhoto">Remover foto</button>
+    </div>
+    <label>Nome do perfil<input type="text" name="nome" id="profileNameInput" required></label>
+    <label>Descrição<input type="text" name="subtitle" id="profileSubtitleInput" placeholder="Seu controle financeiro estilo Organizze"></label>
+    <div class="sheet-actions-row two">
+      <button type="button" class="secondary-btn" data-close-dialog="profileFormDialog">Cancelar</button>
+      <button type="submit" class="primary-btn">Salvar perfil</button>
+    </div>
+  </form>
+</dialog>
+
 </body>
 </html>

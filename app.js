@@ -51,6 +51,13 @@ const defaultState = {
     reportTab:'categorias',
     filters:{ tipos:[], status:[], accounts:[], categoria:'' },
     period:'month',
+    theme:'system',
+    profile:{
+      name:'Danilo & Isabella',
+      subtitle:'Seu controle financeiro estilo Organizze',
+      avatarText:'D&I',
+      avatarImage:''
+    },
     seenReportIntro:false
   }
 };
@@ -74,6 +81,7 @@ function mergeState(saved){
   const merged = structuredClone(defaultState);
   Object.assign(merged, saved);
   merged.meta = { ...defaultState.meta, ...(saved.meta || {}) };
+  merged.meta.profile = { ...defaultState.meta.profile, ...((saved.meta && saved.meta.profile) || {}) };
   merged.accounts = Array.isArray(saved.accounts) ? saved.accounts : defaultState.accounts;
   merged.cards = Array.isArray(saved.cards) ? saved.cards : defaultState.cards;
   merged.categories = Array.isArray(saved.categories) ? saved.categories : defaultState.categories;
@@ -215,6 +223,98 @@ function maybeHidden(value){
   return state.meta.hideBalance ? 'R$ ••••' : brl(value);
 }
 
+function initialsFromName(name){
+  const cleaned = String(name || '').trim();
+  if(!cleaned) return 'MC';
+  const parts = cleaned.split(/\s+/).filter(Boolean);
+  if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
+function getProfile(){
+  const profile = state.meta.profile || {};
+  const name = profile.name || 'Danilo & Isabella';
+  return {
+    name,
+    subtitle: profile.subtitle || 'Seu controle financeiro estilo Organizze',
+    avatarText: profile.avatarText || initialsFromName(name),
+    avatarImage: profile.avatarImage || ''
+  };
+}
+
+function inferBankIcon(name){
+  const value = String(name || '').toLowerCase();
+  if(value.includes('nubank') || value.includes('nuconta')) return 'nubank';
+  if(value.includes('itaú') || value.includes('itau')) return 'itau';
+  if(value.includes('santander')) return 'santander';
+  if(value.includes('caixa')) return 'caixa';
+  if(value.includes('inter')) return 'inter';
+  if(value.includes('brasil') || value === 'bb' || value.includes('banco do brasil')) return 'bb';
+  if(value.includes('cofrinho')) return 'cofrinho';
+  return 'default';
+}
+
+function bankLogoMarkup(icon, name, extraClass = ''){
+  const brand = {
+    nubank: { text: 'nu', labelClass: 'is-short' },
+    itau: { text: 'itaú', labelClass: 'is-word' },
+    bb: { text: 'BB', labelClass: 'is-short' },
+    santander: { text: 'Sant', labelClass: 'is-word' },
+    caixa: { text: 'CAIXA', labelClass: 'is-word' },
+    inter: { text: 'inter', labelClass: 'is-word' },
+    cofrinho: { text: 'co', labelClass: 'is-short' },
+    default: { text: initialsFromName(name), labelClass: 'is-short' }
+  }[icon || 'default'] || { text: initialsFromName(name), labelClass: 'is-short' };
+
+  return `<div class="logo-badge brand-${icon || 'default'} ${extraClass}" aria-label="${name}"><span class="brand-label ${brand.labelClass}">${brand.text}</span></div>`;
+}
+
+function renderAvatar(el, profile){
+  if(!el) return;
+  if(profile.avatarImage){
+    el.innerHTML = `<img src="${profile.avatarImage}" alt="Foto do perfil" class="avatar-inner-img">`;
+    el.classList.add('has-image');
+  } else {
+    el.textContent = profile.avatarText;
+    el.classList.remove('has-image');
+  }
+}
+
+function renderProfileUI(){
+  const profile = getProfile();
+  if($('#homeProfileName')) $('#homeProfileName').textContent = profile.name;
+  if($('#homeProfileSubtitle')) $('#homeProfileSubtitle').textContent = profile.subtitle;
+  if($('#profileName')) $('#profileName').textContent = profile.name;
+  if($('#profileSubtitle')) $('#profileSubtitle').textContent = profile.subtitle;
+  renderAvatar($('#homeAvatar'), profile);
+  renderAvatar($('#profileAvatar'), profile);
+
+  const desktopText = $('#desktopAvatarText');
+  const desktopImage = $('#desktopAvatarImage');
+  if(desktopText && desktopImage){
+    if(profile.avatarImage){
+      desktopImage.src = profile.avatarImage;
+      desktopImage.classList.remove('hidden');
+      desktopText.classList.add('hidden');
+    } else {
+      desktopText.textContent = profile.avatarText;
+      desktopText.classList.remove('hidden');
+      desktopImage.classList.add('hidden');
+      desktopImage.removeAttribute('src');
+    }
+  }
+}
+
+let profilePhotoDraft = null;
+
+function fillProfileForm(){
+  const profile = getProfile();
+  profilePhotoDraft = profile.avatarImage || '';
+  if($('#profileNameInput')) $('#profileNameInput').value = profile.name;
+  if($('#profileSubtitleInput')) $('#profileSubtitleInput').value = profile.subtitle;
+  renderAvatar($('#profilePreviewAvatar'), { avatarImage: profilePhotoDraft, avatarText: profile.avatarText });
+}
+
 function renderHome(){
   const monthItems = getMonthTransactions(state.meta.currentMonth, 'month');
   const income = monthItems.filter(tx => tx.tipo === 'Receita').reduce((a,b)=>a + Number(b.valor || 0), 0);
@@ -230,7 +330,7 @@ function renderHome(){
   $('#homeAccountsList').innerHTML = activeAccounts().map(account => `
     <div class="account-row">
       <div class="row-left">
-        <div class="logo-badge ${account.icon || 'default'}">${account.nome.slice(0,2).toLowerCase()}</div>
+        ${bankLogoMarkup(account.icon || inferBankIcon(account.nome), account.nome)}
         <div>
           <div class="row-title">${account.nome}</div>
           <div class="row-sub">Conta manual</div>
@@ -245,7 +345,7 @@ function renderHome(){
   $('#homeCardsList').innerHTML = state.cards.map(card => `
     <div class="card-row">
       <div class="row-left">
-        <div class="logo-badge ${card.icon || 'default'}">nu</div>
+        ${bankLogoMarkup(card.icon || inferBankIcon(card.nome), card.nome)}
         <div>
           <div class="row-title">${card.nome}</div>
           <div class="row-sub">Fecha dia ${card.fecha} - Vence dia ${card.vence}</div>
@@ -258,10 +358,11 @@ function renderHome(){
     </div>`).join('');
 
   const currentMonthLabel = getMonthNameByString(state.meta.currentMonth);
-  const cardsTotal = state.cards.reduce((sum, card) => sum + Number(card.faturaAtual || 0), 0);
+  const cardsTotal = state.cards.reduce((sum, card) => sum + Number((card.faturaAtual ?? card.fatura) || 0), 0);
 
   if ($('#desktopHelloName')) {
-    $('#desktopHelloName').textContent = 'Danilo & Isabella!';
+    const profile = getProfile();
+    $('#desktopHelloName').textContent = `${profile.name}!`;
     $('#desktopMonthlyIncome').textContent = maybeHidden(income);
     $('#desktopMonthlyExpense').textContent = maybeHidden(expense);
     $('#desktopBalanceValue').textContent = maybeHidden(balance);
@@ -275,13 +376,13 @@ function renderHome(){
 
     $('#desktopConnections').innerHTML = connections.map(item => item.plus
       ? `<button class="desktop-connection-badge plus">＋</button>`
-      : `<button class="desktop-connection-badge ${item.icon}">${item.nome.slice(0,2).toLowerCase()}</button>`
+      : `<button class="desktop-connection-badge has-logo">${bankLogoMarkup(item.icon || inferBankIcon(item.nome), item.nome, 'small-badge')}</button>`
     ).join('');
 
     $('#desktopAccountsList').innerHTML = activeAccounts().map(account => `
       <div class="desktop-account-row">
         <div class="desktop-account-left">
-          <div class="logo-badge ${account.icon || 'default'}">${account.nome.slice(0,2).toLowerCase()}</div>
+          ${bankLogoMarkup(account.icon || inferBankIcon(account.nome), account.nome)}
           <div>
             <div class="desktop-row-title">${account.nome}</div>
             <div class="desktop-row-sub">Conta manual</div>
@@ -304,7 +405,7 @@ function renderHome(){
         </div>
         <div class="desktop-card-summary">
           <div><span>Limite Disponível</span><strong>${maybeHidden(card.disponivel)}</strong></div>
-          <div><span>Fatura atual</span><strong>${maybeHidden(card.faturaAtual)}</strong></div>
+          <div><span>Fatura atual</span><strong>${maybeHidden(card.faturaAtual ?? card.fatura)}</strong></div>
         </div>
       </div>`).join('');
 
@@ -317,7 +418,7 @@ function renderAccountsScreens(){
   $('#accountsScreenList').innerHTML = activeAccounts().map(account => `
     <div class="card-box">
       <div class="row-left">
-        <div class="logo-badge ${account.icon || 'default'}">${account.nome.slice(0,2).toLowerCase()}</div>
+        ${bankLogoMarkup(account.icon || inferBankIcon(account.nome), account.nome)}
         <div class="card-box-body">
           <div class="row-title">${account.nome}</div>
           <div class="row-sub">Conta manual</div>
@@ -333,7 +434,7 @@ function renderAccountsScreens(){
   $('#archivedAccountsList').innerHTML = archivedAccounts().map(account => `
     <div class="card-box">
       <div class="row-left">
-        <div class="logo-badge ${account.icon || 'default'}">${account.nome.slice(0,2).toLowerCase()}</div>
+        ${bankLogoMarkup(account.icon || inferBankIcon(account.nome), account.nome)}
         <div class="card-box-body">
           <div class="row-title">${account.nome}</div>
           <div class="row-sub">Conta manual</div>
@@ -360,13 +461,13 @@ function renderCardsScreens(){
   $('#cardsScreenList').innerHTML = state.cards.map(card => `
     <div class="card-box">
       <div class="row-left">
-        <div class="logo-badge ${card.icon || 'default'}">nu</div>
+        ${bankLogoMarkup(card.icon || inferBankIcon(card.nome), card.nome)}
         <div class="card-box-body">
           <div class="row-title">${card.nome}</div>
           <div class="row-sub">Fecha dia ${card.fecha} - Vence dia ${card.vence}</div>
           <hr>
           <div class="card-box-meta">
-            <div class="col"><span>Fatura atual</span><strong>${maybeHidden(card.fatura)}</strong></div>
+            <div class="col"><span>Fatura atual</span><strong>${maybeHidden(card.faturaAtual ?? card.fatura)}</strong></div>
             <div class="col"><span>Disponível</span><strong>${maybeHidden(card.disponivel)}</strong></div>
           </div>
         </div>
@@ -601,6 +702,8 @@ function renderReportIntro(){
 function capitalize(text){ return text.charAt(0).toUpperCase() + text.slice(1); }
 
 function renderAll(){
+  applyThemePreference();
+  renderProfileUI();
   renderHome();
   renderAccountsScreens();
   renderCardsScreens();
@@ -718,7 +821,7 @@ $('#accountForm').addEventListener('submit', event => {
     nome: fd.get('nome'),
     saldo: Number(fd.get('saldo') || 0),
     status: fd.get('status'),
-    icon: 'default'
+    icon: inferBankIcon(fd.get('nome'))
   });
   event.target.reset();
   saveState();
@@ -736,7 +839,8 @@ $('#cardForm').addEventListener('submit', event => {
     disponivel: Number(fd.get('disponivel') || 0),
     fecha: fd.get('fecha'),
     vence: fd.get('vence'),
-    icon: 'default'
+    icon: inferBankIcon(fd.get('nome')),
+    faturaAtual: Number(fd.get('fatura') || 0)
   });
   event.target.reset();
   saveState();
@@ -864,6 +968,61 @@ window.addEventListener('keydown', event => {
 });
 
 
+
+
+// Perfil
+if($('#btnOpenEditProfile')){
+  $('#btnOpenEditProfile').addEventListener('click', () => {
+    fillProfileForm();
+    $('#profileFormDialog').showModal();
+  });
+}
+if($('#desktopAvatarButton')){
+  $('#desktopAvatarButton').addEventListener('click', () => openScreen('screen-profile'));
+}
+if($('#profilePhotoInput')){
+  $('#profilePhotoInput').addEventListener('change', event => {
+    const file = event.target.files?.[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      profilePhotoDraft = reader.result;
+      const profile = getProfile();
+      renderAvatar($('#profilePreviewAvatar'), { avatarImage: profilePhotoDraft, avatarText: profile.avatarText });
+    };
+    reader.readAsDataURL(file);
+  });
+}
+if($('#btnRemoveProfilePhoto')){
+  $('#btnRemoveProfilePhoto').addEventListener('click', () => {
+    profilePhotoDraft = '';
+    const draftName = $('#profileNameInput')?.value || getProfile().name;
+    renderAvatar($('#profilePreviewAvatar'), { avatarImage: '', avatarText: initialsFromName(draftName) });
+    if($('#profilePhotoInput')) $('#profilePhotoInput').value = '';
+  });
+}
+if($('#profileNameInput')){
+  $('#profileNameInput').addEventListener('input', event => {
+    if(profilePhotoDraft) return;
+    renderAvatar($('#profilePreviewAvatar'), { avatarImage: '', avatarText: initialsFromName(event.target.value) });
+  });
+}
+if($('#profileForm')){
+  $('#profileForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const fd = new FormData(event.target);
+    const name = String(fd.get('nome') || '').trim() || 'Danilo & Isabella';
+    state.meta.profile = {
+      name,
+      subtitle: String(fd.get('subtitle') || '').trim() || 'Seu controle financeiro estilo Organizze',
+      avatarText: initialsFromName(name),
+      avatarImage: profilePhotoDraft || ''
+    };
+    saveState();
+    renderAll();
+    $('#profileFormDialog').close();
+  });
+}
 
 /* ===== Correção 3.1.4: alternância de tema ===== */
 function applyThemePreference(){
