@@ -55,17 +55,3 @@ Atualização 3.1.4:
   * Modo escuro
   * Modo claro
 - melhorado o layout das configurações no desktop.
-
-
-Atualização 3.1.5:
-- corrigida a rolagem da tela inicial no celular;
-- a barra de valores do fluxo deixou de ser fixa no mobile, para não tampar os lançamentos;
-- mantido o comportamento desktop com layout amplo;
-- ajustada altura dinâmica para navegador mobile/Safari.
-
-
-Atualização 3.1.6:
-- tela inicial separada para desktop e celular;
-- desktop inspirado no layout de painel mais amplo;
-- mobile com cabeçalho verde e cards sobrepostos;
-- listas de contas e cartões ajustadas para cada formato.
