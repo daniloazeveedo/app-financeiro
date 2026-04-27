@@ -39,3 +39,10 @@ Atualização 3.1.2:
 - menu inferior fica só no mobile;
 - painel de detalhes da transação ganhou botão X;
 - clicar fora do painel também fecha a transação/modal.
+
+
+Atualização 3.1.3:
+- corrigido o conteúdo ficando escondido embaixo do menu superior no desktop;
+- desktop agora começa abaixo da barra verde;
+- ajustado grid da tela inicial para não cortar cards;
+- corrigida rolagem interna do conteúdo.
