@@ -74,3 +74,14 @@ Atualização 3.2.1:
 - edição de perfil/foto e configurações anteriores preservadas;
 - cards de contas e cartões redesenhados na home desktop;
 - opção de ocultar valores mantida.
+
+
+Atualização 3.2.2:
+- corrigida a sobreposição de header/ticker/conteúdo;
+- tela inicial desktop ajustada para ficar mais próxima do mockup aprovado;
+- barra de mercado com indicação de última atualização;
+- ativos favoritos aparecem na barra superior e na página Mercado;
+- adicionada tela/modal para adicionar/remover ativos favoritos;
+- ativos disponíveis: IBOV, Dólar, Euro, Bitcoin, PETR4, VALE3, ITUB4, S&P 500 e Nasdaq;
+- cotações reais via APIs públicas gratuitas quando disponíveis, com fallback local para evitar quebra visual;
+- opção nas configurações para exibir/ocultar barra de cotações e ativar/desativar atualização automática.

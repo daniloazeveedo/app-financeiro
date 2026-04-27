@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Meu Controle 3.2.1</title>
+  <title>Meu Controle 3.2.2</title>
   <meta name="theme-color" content="#181C22" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -37,7 +37,7 @@
           <button class="desktop-avatar" id="desktopAvatarButton"><span id="desktopAvatarText">D</span><img id="desktopAvatarImage" class="avatar-img hidden" alt="Foto do perfil"></button>
         </div>
       </nav>
-      <div class="market-ticker" id="marketTicker"><div class="ticker-track" id="tickerTrack">Carregando cotações...</div></div>
+      <div class="market-ticker" id="marketTicker"><div class="ticker-inner"><div class="ticker-left"><span class="ticker-spark">⌁</span><div class="ticker-track" id="tickerTrack">Carregando cotações...</div></div><div class="ticker-meta" id="tickerMeta">Atualizando...</div></div></div>
       <section class="screen active" id="screen-home">
         <header class="topbar light">
           <div class="topbar-side"></div>
@@ -379,6 +379,15 @@
             <div class="news-hero-badge">AI</div>
           </div>
 
+          <div class="market-toolbar">
+            <div>
+              <span class="toolbar-kicker">Ativos favoritos</span>
+              <h2>Minha lista de acompanhamento</h2>
+              <p>Escolha os ativos que aparecem aqui e na barra superior.</p>
+            </div>
+            <button class="primary-btn market-add-btn" id="btnOpenAssetDialog">Adicionar ativo</button>
+          </div>
+
           <div class="market-grid" id="marketCards"></div>
 
           <div class="section-card news-card-list">
@@ -406,7 +415,7 @@
           </div>
           <div class="section-card toggle-card">
             <h2>Mercado financeiro</h2>
-            <div class="toggle-row"><span>Mostrar barra de cotações</span><button class="switch on" id="marketTickerSwitch"></button></div>
+            <div class="toggle-row"><span>Mostrar barra de cotações</span><button class="switch on" id="marketTickerSwitch"></button></div><div class="toggle-row"><span>Atualizar cotações automaticamente</span><button class="switch on" id="marketAutoRefreshSwitch"></button></div>
           </div>
           <div class="section-card toggle-card">
             <h2>Ordem dos lançamentos</h2>
@@ -754,6 +763,23 @@
     </div>
   </form>
 </dialog>
+
+
+  <dialog class="sheet-dialog" id="assetDialog">
+    <form class="sheet-card form-sheet asset-dialog-card" id="assetForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head"><h2>Adicionar ativos</h2><button type="button" class="icon-btn close-sheet" data-close-dialog="assetDialog">✕</button></div>
+      <p class="sheet-subtitle">Selecione os ativos que você quer acompanhar na barra superior e na página Mercado.</p>
+      <div class="asset-search-box">
+        <input type="search" id="assetSearchInput" placeholder="Pesquisar ativo, ex: dólar, BTC, PETR4..." />
+      </div>
+      <div class="asset-options" id="assetOptions"></div>
+      <div class="sheet-actions-row two">
+        <button type="button" class="secondary-btn" data-close-dialog="assetDialog">Cancelar</button>
+        <button type="submit" class="primary-btn">Salvar ativos</button>
+      </div>
+    </form>
+  </dialog>
 
 </body>
 </html>

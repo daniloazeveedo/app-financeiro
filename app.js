@@ -53,6 +53,9 @@ const defaultState = {
     period:'month',
     theme:'system',
     showMarketTicker:true,
+    marketAutoRefresh:true,
+    favoriteAssets:['IBOV','USD-BRL','EUR-BRL','BTC-BRL','PETR4'],
+    marketLastUpdated:null,
     profile:{
       name:'Danilo & Isabella',
       subtitle:'Seu controle financeiro estilo Organizze',
@@ -717,6 +720,32 @@ function renderReportIntro(){
 }
 
 
+
+const marketAssetsCatalog = [
+  { id:'IBOV', symbol:'IBOV', name:'Ibovespa', type:'index', source:'brapi', query:'^BVSP', currency:'BRL' },
+  { id:'USD-BRL', symbol:'DÓLAR', name:'Dólar comercial', type:'currency', source:'awesome', query:'USD-BRL', currency:'BRL' },
+  { id:'EUR-BRL', symbol:'EURO', name:'Euro comercial', type:'currency', source:'awesome', query:'EUR-BRL', currency:'BRL' },
+  { id:'BTC-BRL', symbol:'BTC', name:'Bitcoin', type:'crypto', source:'awesome', query:'BTC-BRL', currency:'BRL' },
+  { id:'PETR4', symbol:'PETR4', name:'Petrobras PN', type:'stock', source:'brapi', query:'PETR4', currency:'BRL' },
+  { id:'VALE3', symbol:'VALE3', name:'Vale ON', type:'stock', source:'brapi', query:'VALE3', currency:'BRL' },
+  { id:'ITUB4', symbol:'ITUB4', name:'Itaú PN', type:'stock', source:'brapi', query:'ITUB4', currency:'BRL' },
+  { id:'SP500', symbol:'S&P 500', name:'S&P 500', type:'index', source:'stooq', query:'^spx', currency:'USD' },
+  { id:'NASDAQ', symbol:'NASDAQ', name:'Nasdaq Composite', type:'index', source:'stooq', query:'^ndq', currency:'USD' }
+];
+
+const marketFallbackMap = {
+  'IBOV': { symbol:'IBOV', name:'Ibovespa', price:'134.000', change:'+0,46%', rawChange:0.46, currency:'BRL', source:'fallback' },
+  'USD-BRL': { symbol:'DÓLAR', name:'Dólar comercial', price:'5,42', change:'+0,82%', rawChange:0.82, currency:'BRL', source:'fallback' },
+  'EUR-BRL': { symbol:'EURO', name:'Euro comercial', price:'5,85', change:'+0,41%', rawChange:0.41, currency:'BRL', source:'fallback' },
+  'BTC-BRL': { symbol:'BTC', name:'Bitcoin', price:'382.091', change:'-2,23%', rawChange:-2.23, currency:'BRL', source:'fallback' },
+  'PETR4': { symbol:'PETR4', name:'Petrobras PN', price:'38,42', change:'+1,15%', rawChange:1.15, currency:'BRL', source:'fallback' },
+  'VALE3': { symbol:'VALE3', name:'Vale ON', price:'61,80', change:'-0,38%', rawChange:-0.38, currency:'BRL', source:'fallback' },
+  'ITUB4': { symbol:'ITUB4', name:'Itaú PN', price:'33,25', change:'+0,26%', rawChange:0.26, currency:'BRL', source:'fallback' },
+  'SP500': { symbol:'S&P 500', name:'S&P 500', price:'5.420', change:'+0,52%', rawChange:0.52, currency:'USD', source:'fallback' },
+  'NASDAQ': { symbol:'NASDAQ', name:'Nasdaq Composite', price:'17.890', change:'+0,77%', rawChange:0.77, currency:'USD', source:'fallback' }
+};
+
+
 const fallbackMarketData = [
   { symbol:'USD/BRL', price:'5,61', change:'+0,24%' },
   { symbol:'EUR/BRL', price:'6,02', change:'-0,11%' },
@@ -737,30 +766,176 @@ function tickerClass(change){
   return 'ticker-flat';
 }
 
-function normalizeBRLQuote(item, symbol){
-  const bid = Number(item?.bid || item?.ask || 0);
-  const pct = Number(item?.pctChange || 0);
-  return {
-    symbol,
-    price: bid ? bid.toLocaleString('pt-BR', { minimumFractionDigits: symbol.includes('BTC') ? 0 : 2, maximumFractionDigits: symbol.includes('BTC') ? 0 : 2 }) : '0,00',
-    change: `${pct >= 0 ? '+' : ''}${pct.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`
-  };
+
+function formatNumberBR(value, currency = 'BRL'){
+  const num = Number(value);
+  if(!Number.isFinite(num)) return '--';
+  if(currency === 'USD'){
+    return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function normalizePercent(value){
+  const num = Number(value);
+  if(!Number.isFinite(num)) return '0,00%';
+  const sign = num > 0 ? '+' : '';
+  return `${sign}${num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+}
+
+function favoriteAssetIds(){
+  const ids = state.meta.favoriteAssets;
+  return Array.isArray(ids) && ids.length ? ids : ['IBOV','USD-BRL','EUR-BRL','BTC-BRL','PETR4'];
+}
+
+function getAssetById(id){
+  return marketAssetsCatalog.find(asset => asset.id === id) || marketAssetsCatalog[0];
+}
+
+function currencyPrefix(asset){
+  if(asset.currency === 'USD') return 'US$';
+  if(asset.currency === 'BRL') return 'R$';
+  return '';
+}
+
+function fallbackForAsset(id){
+  const asset = getAssetById(id);
+  const fallback = marketFallbackMap[id] || marketFallbackMap[asset.id] || marketFallbackMap.IBOV;
+  return { ...fallback, id: asset.id, type: asset.type, currency: asset.currency };
+}
+
+async function fetchAwesomeAssets(assets){
+  if(!assets.length) return {};
+  const pairs = assets.map(a => a.query).join(',');
+  const response = await fetch(`https://economia.awesomeapi.com.br/last/${pairs}`);
+  if(!response.ok) throw new Error('AwesomeAPI indisponível');
+  const json = await response.json();
+  const result = {};
+  assets.forEach(asset => {
+    const key = asset.query.replace('-', '');
+    const item = json[key];
+    if(item){
+      const rawChange = Number(item.pctChange || 0);
+      result[asset.id] = {
+        id: asset.id,
+        symbol: asset.symbol,
+        name: asset.name,
+        price: formatNumberBR(item.bid, asset.currency),
+        change: normalizePercent(rawChange),
+        rawChange,
+        currency: asset.currency,
+        source: 'awesome'
+      };
+    }
+  });
+  return result;
+}
+
+async function fetchBrapiAssets(assets){
+  if(!assets.length) return {};
+  const result = {};
+  await Promise.all(assets.map(async asset => {
+    try{
+      const response = await fetch(`https://brapi.dev/api/quote/${encodeURIComponent(asset.query)}?range=1d&interval=1d`);
+      if(!response.ok) throw new Error('Brapi indisponível');
+      const json = await response.json();
+      const item = json.results?.[0];
+      if(item){
+        const rawChange = Number(item.regularMarketChangePercent || 0);
+        result[asset.id] = {
+          id: asset.id,
+          symbol: asset.symbol,
+          name: asset.name,
+          price: formatNumberBR(item.regularMarketPrice, asset.currency),
+          change: normalizePercent(rawChange),
+          rawChange,
+          currency: asset.currency,
+          source: 'brapi'
+        };
+      }
+    }catch(error){
+      result[asset.id] = fallbackForAsset(asset.id);
+    }
+  }));
+  return result;
+}
+
+async function fetchStooqAssets(assets){
+  if(!assets.length) return {};
+  const result = {};
+  await Promise.all(assets.map(async asset => {
+    try{
+      const url = `https://stooq.com/q/l/?s=${encodeURIComponent(asset.query)}&f=sd2t2ohlcv&h&e=csv`;
+      const response = await fetch(url);
+      if(!response.ok) throw new Error('Stooq indisponível');
+      const text = await response.text();
+      const lines = text.trim().split(/\r?\n/);
+      if(lines.length < 2) throw new Error('Sem dados');
+      const cols = lines[1].split(',');
+      const close = Number(cols[6]);
+      const open = Number(cols[3]);
+      const rawChange = open && close ? ((close - open) / open) * 100 : 0;
+      result[asset.id] = {
+        id: asset.id,
+        symbol: asset.symbol,
+        name: asset.name,
+        price: formatNumberBR(close, asset.currency),
+        change: normalizePercent(rawChange),
+        rawChange,
+        currency: asset.currency,
+        source: 'stooq'
+      };
+    }catch(error){
+      result[asset.id] = fallbackForAsset(asset.id);
+    }
+  }));
+  return result;
 }
 
 async function loadMarketData(){
-  try{
-    const response = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL', { cache:'no-store' });
-    if(!response.ok) throw new Error('cotação indisponível');
-    const data = await response.json();
-    return [
-      normalizeBRLQuote(data.USDBRL, 'USD/BRL'),
-      normalizeBRLQuote(data.EURBRL, 'EUR/BRL'),
-      normalizeBRLQuote(data.BTCBRL, 'BTC/BRL'),
-      fallbackMarketData[3]
-    ];
-  }catch(error){
-    return fallbackMarketData;
+  const ids = favoriteAssetIds();
+  const selectedAssets = ids.map(getAssetById);
+  const groups = {
+    awesome: selectedAssets.filter(asset => asset.source === 'awesome'),
+    brapi: selectedAssets.filter(asset => asset.source === 'brapi'),
+    stooq: selectedAssets.filter(asset => asset.source === 'stooq')
+  };
+
+  const results = {};
+  try{ Object.assign(results, await fetchAwesomeAssets(groups.awesome)); }catch(error){
+    groups.awesome.forEach(asset => results[asset.id] = fallbackForAsset(asset.id));
   }
+  try{ Object.assign(results, await fetchBrapiAssets(groups.brapi)); }catch(error){
+    groups.brapi.forEach(asset => results[asset.id] = fallbackForAsset(asset.id));
+  }
+  try{ Object.assign(results, await fetchStooqAssets(groups.stooq)); }catch(error){
+    groups.stooq.forEach(asset => results[asset.id] = fallbackForAsset(asset.id));
+  }
+
+  state.meta.marketLastUpdated = new Date().toISOString();
+  saveState();
+
+  return ids.map(id => results[id] || fallbackForAsset(id));
+}
+
+function tickerClass(change){
+  const text = String(change || '');
+  return text.includes('-') ? 'negative' : 'positive';
+}
+
+function timeAgoLabel(iso){
+  if(!iso) return 'Atualizando agora';
+  const diffMs = Date.now() - new Date(iso).getTime();
+  if(!Number.isFinite(diffMs) || diffMs < 45000) return 'Atualizado agora';
+  const min = Math.floor(diffMs / 60000);
+  if(min < 60) return `Atualizado há ${min} min`;
+  const hours = Math.floor(min / 60);
+  return `Atualizado há ${hours} h`;
+}
+
+function renderTickerMeta(){
+  const meta = $('#tickerMeta');
+  if(meta) meta.innerHTML = `<span>${timeAgoLabel(state.meta.marketLastUpdated)}</span><i></i>`;
 }
 
 async function renderMarket(){
@@ -769,17 +944,65 @@ async function renderMarket(){
   if(ticker) ticker.classList.toggle('hidden', !show);
   const switchEl = $('#marketTickerSwitch');
   if(switchEl) switchEl.classList.toggle('on', show);
+  const autoEl = $('#marketAutoRefreshSwitch');
+  if(autoEl) autoEl.classList.toggle('on', state.meta.marketAutoRefresh !== false);
 
-  const data = await loadMarketData();
+  let data;
+  try{
+    data = await loadMarketData();
+  }catch(error){
+    data = favoriteAssetIds().map(fallbackForAsset);
+  }
+
   if($('#tickerTrack')){
-    $('#tickerTrack').innerHTML = data.map(item => `<span class="ticker-item"><strong>${item.symbol}</strong><span>R$ ${item.price}</span><span class="${tickerClass(item.change)}">${item.change}</span></span>`).join('');
+    $('#tickerTrack').innerHTML = data.map(item => `<span class="ticker-item"><strong>${item.symbol}</strong><span>${currencyPrefix(item)} ${item.price}</span><span class="${tickerClass(item.change)}">${item.change}</span></span>`).join('');
   }
+  renderTickerMeta();
+
   if($('#marketCards')){
-    $('#marketCards').innerHTML = data.map(item => `<div class="market-card"><span>${item.symbol}</span><strong>R$ ${item.price}</strong><small class="${tickerClass(item.change)}">${item.change}</small></div>`).join('');
+    $('#marketCards').innerHTML = data.map(item => `
+      <div class="market-card favorite-card">
+        <div class="asset-card-head">
+          <span>${item.symbol}</span>
+          <button class="remove-favorite" data-remove-asset="${item.id}" title="Remover dos favoritos">×</button>
+        </div>
+        <strong>${currencyPrefix(item)} ${item.price}</strong>
+        <small class="${tickerClass(item.change)}">${item.change}</small>
+        <em>${item.name}</em>
+      </div>`).join('');
+    $$('[data-remove-asset]').forEach(btn => btn.addEventListener('click', () => {
+      state.meta.favoriteAssets = favoriteAssetIds().filter(id => id !== btn.dataset.removeAsset);
+      if(!state.meta.favoriteAssets.length) state.meta.favoriteAssets = ['USD-BRL'];
+      saveState();
+      renderAssetOptions();
+      renderMarket();
+    }));
   }
+
   if($('#newsList')){
     $('#newsList').innerHTML = marketNews.map(item => `<article class="news-item"><div class="news-icon">${item.icon}</div><div><h3>${item.title}</h3><p>${item.desc}</p></div><span class="news-tag">${item.tag}</span></article>`).join('');
   }
+}
+
+function renderAssetOptions(){
+  const list = $('#assetOptions');
+  if(!list) return;
+  const term = ($('#assetSearchInput')?.value || '').toLowerCase().trim();
+  const selected = new Set(favoriteAssetIds());
+  const filtered = marketAssetsCatalog.filter(asset => {
+    const haystack = `${asset.symbol} ${asset.name} ${asset.type}`.toLowerCase();
+    return !term || haystack.includes(term);
+  });
+
+  list.innerHTML = filtered.map(asset => `
+    <label class="asset-option">
+      <input type="checkbox" value="${asset.id}" ${selected.has(asset.id) ? 'checked' : ''}>
+      <div>
+        <strong>${asset.symbol}</strong>
+        <span>${asset.name}</span>
+      </div>
+      <small>${asset.type}</small>
+    </label>`).join('');
 }
 
 function capitalize(text){ return text.charAt(0).toUpperCase() + text.slice(1); }
