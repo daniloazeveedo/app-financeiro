@@ -124,3 +124,15 @@ Atualização 3.2.6:
 - removida a área/quadradinho de cor diferente na ponta esquerda;
 - ticker agora duplica mais itens para manter a rolagem contínua;
 - mantida remoção da Brapi para evitar erro 401.
+
+
+Atualização 3.3.0 Mobile App Edition:
+- nova experiência mobile premium;
+- barra inferior mobile com botão central de novo lançamento;
+- modal de lançamento rápido em etapas simples;
+- tela de Metas e Orçamentos adicionada;
+- alertas inteligentes básicos;
+- metas iniciais: reserva de emergência, alimentação e delivery;
+- home mobile redesenhada com cards mais premium;
+- desktop preservado;
+- paleta verde/cream mantida.

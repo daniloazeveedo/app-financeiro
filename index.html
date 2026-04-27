@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Meu Controle 3.2.6</title>
+  <title>Meu Controle 3.3.0</title>
   <meta name="theme-color" content="#16C64F" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -317,7 +317,30 @@
         </div>
       </section>
 
-      <section class="screen" id="screen-profile">
+      
+      <section class="screen" id="screen-goals">
+        <header class="topbar green">
+          <button class="icon-btn" data-open-screen="screen-home">‹</button>
+          <h1>Metas</h1>
+          <button class="icon-btn" id="btnAddGoal">＋</button>
+        </header>
+        <div class="secondary-content">
+          <div class="goals-hero">
+            <span>Seu planejamento</span>
+            <h2>Metas e orçamentos</h2>
+            <p>Acompanhe limites por categoria, reserva e objetivos do mês.</p>
+          </div>
+
+          <div class="goals-grid" id="goalsList"></div>
+
+          <div class="section-card smart-alerts-card">
+            <h2>Alertas inteligentes</h2>
+            <div id="smartAlertsList" class="smart-alerts-list"></div>
+          </div>
+        </div>
+      </section>
+
+    <section class="screen" id="screen-profile">
         <header class="topbar light">
           <button class="icon-btn" data-back>‹</button>
           <div class="topbar-side"></div>
@@ -778,6 +801,50 @@
         <button type="button" class="secondary-btn" data-close-dialog="assetDialog">Cancelar</button>
         <button type="submit" class="primary-btn">Salvar ativos</button>
       </div>
+    </form>
+  </dialog>
+
+
+  <dialog class="sheet-dialog" id="quickAddDialog">
+    <form class="sheet-card form-sheet quick-add-sheet" id="quickAddForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h2>Novo lançamento</h2>
+        <button type="button" class="icon-btn close-sheet" data-close-dialog="quickAddDialog">✕</button>
+      </div>
+
+      <div class="quick-type-tabs">
+        <button type="button" class="active" data-quick-type="Despesa">Despesa</button>
+        <button type="button" data-quick-type="Receita">Receita</button>
+        <button type="button" data-quick-type="Transferência">Transferência</button>
+      </div>
+
+      <input type="hidden" name="tipo" id="quickTypeInput" value="Despesa">
+      <label class="amount-label">Valor
+        <input type="number" name="valor" placeholder="0,00" step="0.01" required>
+      </label>
+      <label>Descrição
+        <input type="text" name="descricao" placeholder="Ex: Mercado, Netflix, Salário" required>
+      </label>
+      <label>Categoria
+        <select name="categoria" id="quickCategorySelect"></select>
+      </label>
+      <label>Conta ou cartão
+        <select name="conta" id="quickAccountSelect"></select>
+      </label>
+      <div class="sheet-grid-2">
+        <label>Data<input type="date" name="data" id="quickDateInput"></label>
+        <label>Status
+          <select name="status">
+            <option>Pago</option>
+            <option>Pendente</option>
+          </select>
+        </label>
+      </div>
+      <label>Observação
+        <input type="text" name="observacao" placeholder="Opcional">
+      </label>
+      <button type="submit" class="primary-btn quick-save-btn">Salvar lançamento</button>
     </form>
   </dialog>
 

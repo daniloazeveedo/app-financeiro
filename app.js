@@ -62,6 +62,11 @@ const defaultState = {
       avatarText:'D&I',
       avatarImage:''
     },
+    goals:[
+      { id:'goal-emergency', nome:'Reserva de emergência', tipo:'Meta', atual:850, alvo:5000, cor:'#16C64F' },
+      { id:'goal-food', nome:'Alimentação', tipo:'Orçamento', atual:420, alvo:800, cor:'#D6659A' },
+      { id:'goal-delivery', nome:'Delivery', tipo:'Orçamento', atual:155, alvo:300, cor:'#9F5CE6' }
+    ],
     seenReportIntro:false
   }
 };
@@ -577,6 +582,70 @@ function buildCategoryLines(targetId, rows, total){
     </div>`;
   }).join('') || '<div class="category-line"><div style="color:#888">Sem dados no período.</div></div>';
 }
+
+
+function renderGoals(){
+  const list = $('#goalsList');
+  if(!list) return;
+  const goals = state.meta.goals || [];
+  list.innerHTML = goals.map(goal => {
+    const current = Number(goal.atual || 0);
+    const target = Number(goal.alvo || 1);
+    const percent = Math.min(100, Math.round((current / target) * 100));
+    const isBudget = goal.tipo === 'Orçamento';
+    return `
+      <div class="goal-card">
+        <div class="goal-top">
+          <div>
+            <span>${goal.tipo}</span>
+            <strong>${goal.nome}</strong>
+          </div>
+          <b>${percent}%</b>
+        </div>
+        <div class="goal-progress"><i style="width:${percent}%;background:${goal.cor || '#16C64F'}"></i></div>
+        <div class="goal-values">
+          <span>${isBudget ? 'Usado' : 'Guardado'} ${brl(current)}</span>
+          <span>${isBudget ? 'Limite' : 'Meta'} ${brl(target)}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  const alerts = $('#smartAlertsList');
+  if(alerts){
+    const monthItems = getMonthTransactions(state.meta.currentMonth, 'month');
+    const expense = monthItems.filter(tx => tx.tipo === 'Despesa').reduce((a,b)=>a + Number(b.valor || 0), 0);
+    const income = monthItems.filter(tx => tx.tipo === 'Receita').reduce((a,b)=>a + Number(b.valor || 0), 0);
+    const balance = income - expense;
+    const foodGoal = goals.find(g => g.nome === 'Alimentação');
+    const foodPercent = foodGoal ? Math.round((Number(foodGoal.atual || 0) / Number(foodGoal.alvo || 1)) * 100) : 0;
+
+    const items = [
+      balance >= 0 ? `Seu mês está positivo em ${brl(balance)}.` : `Atenção: suas saídas passaram as entradas em ${brl(Math.abs(balance))}.`,
+      foodPercent >= 75 ? `Você já usou ${foodPercent}% do orçamento de Alimentação.` : `Seu orçamento de Alimentação está sob controle.`,
+      `Dica: cadastre lançamentos fixos para prever melhor o fim do mês.`
+    ];
+
+    alerts.innerHTML = items.map(text => `<div class="smart-alert"><span>💡</span><p>${text}</p></div>`).join('');
+  }
+}
+
+function fillQuickAddForm(){
+  const today = new Date().toISOString().slice(0,10);
+  if($('#quickDateInput')) $('#quickDateInput').value = today;
+
+  const catSelect = $('#quickCategorySelect');
+  if(catSelect){
+    const cats = state.categories || [];
+    catSelect.innerHTML = cats.map(cat => `<option value="${cat.nome}">${cat.nome}</option>`).join('');
+  }
+
+  const accountSelect = $('#quickAccountSelect');
+  if(accountSelect){
+    const accounts = activeAccounts();
+    accountSelect.innerHTML = accounts.map(acc => `<option value="${acc.nome}">${acc.nome}</option>`).join('');
+  }
+}
+
 
 function renderReports(){
   $('#reportsCurrentLabel').textContent = getMonthNameByString(state.meta.reportMonth);
@@ -1321,6 +1390,71 @@ if($('#profileForm')){
     saveState();
     renderAll();
     $('#profileFormDialog').close();
+  });
+}
+
+
+// Mobile App Edition: lançamento rápido
+if($('#mobileQuickAdd')){
+  $('#mobileQuickAdd').addEventListener('click', () => {
+    fillQuickAddForm();
+    $('#quickAddDialog').showModal();
+  });
+}
+
+$$('[data-quick-type]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $$('[data-quick-type]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if($('#quickTypeInput')) $('#quickTypeInput').value = btn.dataset.quickType;
+  });
+});
+
+if($('#quickAddForm')){
+  $('#quickAddForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const fd = new FormData(event.target);
+    const tipo = String(fd.get('tipo') || 'Despesa');
+    const valor = Number(fd.get('valor') || 0);
+    const descricao = String(fd.get('descricao') || '').trim();
+    const categoria = String(fd.get('categoria') || 'Outros');
+    const conta = String(fd.get('conta') || 'Nubank');
+    const data = String(fd.get('data') || new Date().toISOString().slice(0,10));
+    const status = String(fd.get('status') || 'Pago');
+    const recorrencia = 'Único';
+
+    if(!descricao || !valor) return;
+
+    state.transactions.push({
+      id: crypto.randomUUID(),
+      data,
+      descricao,
+      categoria,
+      conta,
+      tipo,
+      valor,
+      status,
+      recorrencia
+    });
+
+    saveState();
+    $('#quickAddDialog').close();
+    event.target.reset();
+    renderAll();
+    openScreen('screen-fluxo');
+  });
+}
+
+if($('#btnAddGoal')){
+  $('#btnAddGoal').addEventListener('click', () => {
+    const nome = prompt('Nome da meta ou orçamento:');
+    if(!nome) return;
+    const alvo = Number(prompt('Valor alvo/limite:', '500'));
+    if(!alvo) return;
+    state.meta.goals = state.meta.goals || [];
+    state.meta.goals.push({ id: crypto.randomUUID(), nome, tipo:'Meta', atual:0, alvo, cor:'#16C64F' });
+    saveState();
+    renderGoals();
   });
 }
 
