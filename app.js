@@ -1059,10 +1059,36 @@ $$('[data-back]').forEach(btn => btn.addEventListener('click', goBack));
 $('#btnToggleHideBalance').addEventListener('click', toggleHide);
 if ($('#btnDesktopToggleHideBalance')) $('#btnDesktopToggleHideBalance').addEventListener('click', toggleHide);
 if ($('#btnDesktopToggleHideBalanceAlt')) $('#btnDesktopToggleHideBalanceAlt').addEventListener('click', toggleHide);
-if ($('#marketTickerSwitch')) $('#marketTickerSwitch').addEventListener('click', () => { state.meta.showMarketTicker = state.meta.showMarketTicker === false; saveState(); renderMarket(); });
-if ($('#btnRefreshMarket')) $('#btnRefreshMarket').addEventListener('click', renderMarket);
+if ($('#marketTickerSwitch')) $('#marketTickerSwitch').addEventListener('click', () => {
+  state.meta.showMarketTicker = state.meta.showMarketTicker === false ? true : false;
+  saveState();
+  renderMarket();
+});
+if ($('#marketAutoRefreshSwitch')) $('#marketAutoRefreshSwitch').addEventListener('click', () => {
+  state.meta.marketAutoRefresh = state.meta.marketAutoRefresh === false ? true : false;
+  saveState();
+  renderMarket();
+});
+if ($('#btnOpenAssetDialog')) $('#btnOpenAssetDialog').addEventListener('click', () => {
+  renderAssetOptions();
+  $('#assetDialog').showModal();
+});
+if ($('#assetSearchInput')) $('#assetSearchInput').addEventListener('input', renderAssetOptions);
+if ($('#assetForm')) $('#assetForm').addEventListener('submit', event => {
+  event.preventDefault();
+  const selected = $$('input[type="checkbox"]:checked', $('#assetOptions')).map(input => input.value);
+  state.meta.favoriteAssets = selected.length ? selected : ['USD-BRL'];
+  saveState();
+  $('#assetDialog').close();
+  paintMarket(getFallbackMarketData());
+  refreshMarket(true);
+});
+if ($('#btnRefreshMarket')) $('#btnRefreshMarket').addEventListener('click', () => refreshMarket(true));
 if ($('#btnOpenNewsSearch')) $('#btnOpenNewsSearch').addEventListener('click', () => window.open('https://news.google.com/search?q=mercado%20financeiro%20Brasil', '_blank'));
-setInterval(renderMarket, 60000);
+setInterval(() => {
+  if(state.meta.marketAutoRefresh !== false) refreshMarket(true);
+  else renderTickerMeta();
+}, 60000);
 $('#btnPrevMonth').addEventListener('click', () => { state.meta.currentMonth = shiftMonth(state.meta.currentMonth,-1); saveState(); renderFlow(); renderHome(); });
 $('#btnNextMonth').addEventListener('click', () => { state.meta.currentMonth = shiftMonth(state.meta.currentMonth,1); saveState(); renderFlow(); renderHome(); });
 $('#labelPrevMonth').addEventListener('click', () => { state.meta.currentMonth = shiftMonth(state.meta.currentMonth,-1); saveState(); renderFlow(); renderHome(); });
@@ -1419,3 +1445,5 @@ bindThemeRows();
 renderViewModeDialog();
 renderAll();
 openScreen('screen-home', false);
+
+window.addEventListener('load', () => { renderMarket(); renderTickerMeta(); });

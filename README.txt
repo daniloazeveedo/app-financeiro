@@ -95,3 +95,13 @@ Atualização 3.2.3:
 - configurações reorganizadas para não cortar os botões;
 - barras internas de lançamentos/relatórios/categorias alinhadas no desktop;
 - correção estrutural aplicada para todas as abas no desktop.
+
+
+Atualização 3.2.4:
+- barra superior refeita em largura total, estilo portal financeiro;
+- paleta trocada para preto/branco/verde, inspirada em portal de mercado;
+- ticker de cotações em grade horizontal, com rolagem automática;
+- ticker mostra dados imediatamente e depois tenta atualizar com APIs gratuitas;
+- botão Adicionar ativo corrigido e modal priorizado sobre as telas;
+- configurações reorganizadas novamente para evitar cortes/sobreposição;
+- barras internas das abas alinhadas para desktop.
