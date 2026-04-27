@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Meu Controle 3.1</title>
+  <meta name="theme-color" content="#18b846" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Meu Controle" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="phone-shell">
+    <div class="status-space"></div>
+    <main class="app-screen">
+      <section class="screen active" id="screen-home">
+        <header class="topbar light">
+          <div class="topbar-side"></div>
+          <h1>Início</h1>
+          <button class="icon-btn" data-open-screen="screen-settings">⚙</button>
+        </header>
+
+        <div class="content-area with-nav">
+          <div class="hero-card">
+            <div class="profile-mini">
+              <div class="avatar-ring"><div class="avatar-photo">D&I</div></div>
+              <div>
+                <div class="hero-title">Danilo &amp; Isabella</div>
+                <div class="hero-subtitle">Seu controle financeiro estilo Organizze</div>
+              </div>
+            </div>
+            <div class="hero-balance">
+              <div>
+                <span>Saldo geral</span>
+                <strong id="homeTotalBalance">R$ 0,00</strong>
+              </div>
+              <button id="btnToggleHideBalance" class="pill-btn">Ocultar</button>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-title-row">
+              <h2>Resumo rápido</h2>
+              <button class="link-btn" data-open-screen="screen-fluxo">Ver fluxo</button>
+            </div>
+            <div class="summary-grid">
+              <div><small>Entradas</small><strong class="positive" id="homeIncome">R$ 0,00</strong></div>
+              <div><small>Saídas</small><strong class="negative" id="homeExpense">R$ 0,00</strong></div>
+              <div><small>Saldo previsto</small><strong class="accent" id="homeForecast">R$ 0,00</strong></div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-title-row">
+              <h2>Contas</h2>
+              <button class="link-btn" data-open-screen="screen-accounts">Gerenciar</button>
+            </div>
+            <div id="homeAccountsList" class="list-stack"></div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-title-row">
+              <h2>Cartões</h2>
+              <button class="link-btn" data-open-screen="screen-cards">Ver todos</button>
+            </div>
+            <div id="homeCardsList" class="list-stack"></div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-title-row">
+              <h2>Acesso rápido</h2>
+            </div>
+            <div class="quick-actions">
+              <button class="quick-action" data-open-screen="screen-categories">Categorias</button>
+              <button class="quick-action" data-open-screen="screen-tags">Tags</button>
+              <button class="quick-action" data-open-screen="screen-profile">Perfil</button>
+              <button class="quick-action" data-open-screen="screen-help">Ajuda</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-fluxo">
+        <header class="topbar green center-title">
+          <div class="topbar-side"></div>
+          <h1>Fluxo de caixa</h1>
+          <div class="topbar-actions">
+            <button class="icon-btn" id="btnOpenViewMode">⇄</button>
+            <button class="icon-btn" id="btnOpenFlowMenu">⋮</button>
+          </div>
+        </header>
+
+        <div class="month-bar">
+          <button class="month-arrow" id="btnPrevMonth">‹</button>
+          <button class="month-item" id="labelPrevMonth">Março</button>
+          <button class="month-item current" id="labelCurrentMonth">Abril</button>
+          <button class="month-item" id="labelNextMonth">Maio</button>
+          <button class="month-arrow" id="btnNextMonth">›</button>
+        </div>
+
+        <div class="content-area with-nav flow-layout">
+          <div id="cashflowList" class="day-list"></div>
+
+          <div class="result-bar" id="flowResultBar">
+            <div>
+              <strong class="positive" id="flowEntradas">R$ 0,00</strong>
+              <span>entradas</span>
+            </div>
+            <div>
+              <strong class="negative" id="flowSaidas">R$ 0,00</strong>
+              <span>saídas</span>
+            </div>
+            <div>
+              <strong class="accent" id="flowSaldo">R$ 0,00</strong>
+              <span>saldo</span>
+            </div>
+            <button class="mini-expand" id="btnToggleExpected">⌃</button>
+          </div>
+
+          <div class="result-bar expected collapsed" id="flowExpectedBar">
+            <div>
+              <strong class="positive" id="flowPrevEntradas">R$ 0,00</strong>
+              <span>previsto</span>
+            </div>
+            <div>
+              <strong class="negative" id="flowPrevSaidas">R$ 0,00</strong>
+              <span>previsto</span>
+            </div>
+            <div>
+              <strong class="accent" id="flowPrevSaldo">R$ 0,00</strong>
+              <span>previsto</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="fab red" id="fabAddTransaction">+</button>
+      </section>
+
+      <section class="screen" id="screen-reports">
+        <header class="topbar green center-title">
+          <div class="topbar-side"></div>
+          <h1>Relatórios</h1>
+          <div class="topbar-side"></div>
+        </header>
+        <div class="month-bar">
+          <button class="month-arrow" id="btnReportsPrevMonth">‹</button>
+          <button class="month-item" id="reportsPrevLabel">Março</button>
+          <button class="month-item current" id="reportsCurrentLabel">Abril</button>
+          <button class="month-item" id="reportsNextLabel">Maio</button>
+          <button class="month-arrow" id="btnReportsNextMonth">›</button>
+        </div>
+        <div class="tabs-bar">
+          <button class="tab-option active" data-report-tab="categorias">Categorias</button>
+          <button class="tab-option" data-report-tab="balanco">Balanço</button>
+          <button class="tab-option" data-report-tab="tags">Tags</button>
+        </div>
+        <div class="content-area with-nav reports-area">
+          <div class="filter-badge">▦ Filtros</div>
+
+          <div id="reportTabCategorias" class="report-tab-panel active">
+            <div class="report-card big-card">
+              <div class="report-card-head">
+                <h2>Despesas</h2>
+              </div>
+              <div class="chart-holder"><canvas id="expensesChart"></canvas></div>
+              <div id="expenseCategoryList" class="category-lines"></div>
+              <div class="report-total"><span>Total</span><strong id="expenseTotal">R$ 0,00</strong></div>
+            </div>
+            <div class="report-card big-card">
+              <div class="report-card-head">
+                <h2>Receitas</h2>
+              </div>
+              <div class="chart-holder"><canvas id="incomeChart"></canvas></div>
+              <div id="incomeCategoryList" class="category-lines"></div>
+              <div class="report-total"><span>Total</span><strong id="incomeTotal">R$ 0,00</strong></div>
+            </div>
+          </div>
+
+          <div id="reportTabBalanco" class="report-tab-panel">
+            <div class="report-card big-card">
+              <h2>Entradas x Saídas</h2>
+              <div class="chart-holder chart-holder-bar"><canvas id="balanceChart"></canvas></div>
+              <table class="simple-table">
+                <thead><tr><th>Período</th><th>Entradas</th><th>Saídas</th><th>Resultado</th></tr></thead>
+                <tbody id="balanceTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="reportTabTags" class="report-tab-panel">
+            <div class="empty-card"><h2>Despesas <span class="negative" id="tagsExpenseTotal">0,00</span></h2><p>Não há dados disponíveis no período</p></div>
+            <div class="empty-card"><h2>Receitas <span class="positive" id="tagsIncomeTotal">0,00</span></h2><p>Não há dados disponíveis no período</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-categories">
+        <header class="topbar green center-title">
+          <button class="icon-btn" data-back>‹</button>
+          <h1>Categorias</h1>
+          <div class="topbar-actions">
+            <button class="icon-btn">⌕</button>
+            <button class="icon-btn" id="btnOpenCategoryForm">＋</button>
+          </div>
+        </header>
+        <div class="content-area with-nav">
+          <div class="segmented-control large" id="categorySegmented">
+            <button class="segment active" data-cat-type="Despesa">Despesas</button>
+            <button class="segment" data-cat-type="Receita">Receitas</button>
+          </div>
+          <div id="categoriesList" class="simple-list"></div>
+          <button class="cta-btn" id="btnCreateCategory">＋ Criar categoria</button>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-profile">
+        <header class="topbar light">
+          <button class="icon-btn" data-back>‹</button>
+          <div class="topbar-side"></div>
+          <div class="topbar-actions">
+            <button class="icon-btn">🔔</button>
+            <button class="icon-btn" data-open-screen="screen-settings">⚙</button>
+          </div>
+        </header>
+        <div class="content-area with-nav">
+          <div class="profile-card">
+            <div class="avatar-large">D&amp;I</div>
+            <h2>Danilo &amp; Isabella</h2>
+            <button class="soft-green-btn">Editar perfil</button>
+          </div>
+
+          <div class="section-card clickable-stack">
+            <h2>Configure</h2>
+            <button class="row-button" data-open-screen="screen-accounts">Contas</button>
+            <button class="row-button" data-open-screen="screen-cards">Cartões de Crédito</button>
+            <button class="row-button" data-open-screen="screen-categories">Categorias</button>
+            <button class="row-button" data-open-screen="screen-tags">Tags</button>
+          </div>
+
+          <div class="blue-plan-card">
+            <div class="plan-badge">☆</div>
+            <div>
+              <h3>Você está no Plano Manual</h3>
+              <p>Assinatura mensal - Renova em 15/01/2026</p>
+            </div>
+            <button class="plan-btn">Migrar para plano anual</button>
+          </div>
+
+          <div class="section-card feedback-card">
+            <h2>Você está gostando do app?</h2>
+            <p>Queremos muito saber como está sendo sua experiência com nosso aplicativo.</p>
+            <div class="feedback-grid">
+              <button>😞<span>Pode melhorar</span></button>
+              <button>😍<span>Estou gostando</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen secondary" id="screen-settings">
+        <header class="topbar green center-title">
+          <button class="icon-btn" data-back>‹</button>
+          <h1>Configurações</h1>
+          <div class="topbar-side"></div>
+        </header>
+        <div class="content-area secondary-content">
+          <div class="section-card toggle-card">
+            <h2>Visual do aplicativo</h2>
+            <div class="toggle-row radio on"><span>Usar do sistema</span><span class="radio-dot"></span></div>
+            <div class="toggle-row radio"><span>Modo escuro</span><span class="radio-dot"></span></div>
+            <div class="toggle-row radio"><span>Modo claro</span><span class="radio-dot"></span></div>
+          </div>
+          <div class="section-card toggle-card">
+            <h2>Ordem dos lançamentos</h2>
+            <div class="toggle-row radio on"><span>Crescente</span><span class="radio-dot"></span></div>
+            <div class="toggle-row radio"><span>Decrescente</span><span class="radio-dot"></span></div>
+          </div>
+          <div class="section-card toggle-card">
+            <h2>Sugestões automáticas</h2>
+            <div class="toggle-row chevron"><span>Sugestões ao digitar descrição</span><span>›</span></div>
+          </div>
+          <div class="section-card toggle-card">
+            <h2>Alertas e Notificações</h2>
+            <div class="toggle-row"><span>Ativar alerta</span><button class="switch on"></button></div>
+          </div>
+          <div class="section-card toggle-card">
+            <h2>Acessibilidade</h2>
+            <div class="toggle-row"><span>Ativar fonte do sistema</span><button class="switch"></button></div>
+          </div>
+          <div class="section-card toggle-card">
+            <h2>Segurança</h2>
+            <div class="toggle-row"><span>Ativar senha ou FaceID</span><button class="switch"></button></div>
+          </div>
+          <div class="section-card clickable-stack">
+            <h2>Outras opções</h2>
+            <button class="row-button">Gerenciar assinaturas</button>
+            <button class="row-button">Políticas de Privacidade</button>
+            <button class="row-button">Termos de Uso</button>
+          </div>
+          <div class="section-card clickable-stack danger-stack">
+            <h2>Área de exclusão</h2>
+            <button class="row-button">Excluir todos os lançamentos</button>
+            <button class="row-button danger">Excluir conta</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen secondary" id="screen-accounts">
+        <header class="topbar green center-title">
+          <button class="icon-btn" data-back>‹</button>
+          <h1>Contas</h1>
+          <button class="icon-btn" id="btnOpenAccountForm">＋</button>
+        </header>
+        <div class="content-area secondary-content">
+          <div class="info-banner">Aqui estão todas suas contas. Você pode editá-las ou ajustar o saldo de contas manuais. <span>Saiba mais</span></div>
+          <div id="accountsScreenList" class="card-list"></div>
+          <h3 class="subsection-title">Contas arquivadas</h3>
+          <div id="archivedAccountsList" class="card-list"></div>
+        </div>
+      </section>
+
+      <section class="screen secondary" id="screen-cards">
+        <header class="topbar green center-title">
+          <button class="icon-btn" data-back>‹</button>
+          <h1>Cartões de crédito</h1>
+          <button class="icon-btn" id="btnOpenCardForm">＋</button>
+        </header>
+        <div class="content-area secondary-content">
+          <div id="cardsScreenList" class="card-list"></div>
+        </div>
+      </section>
+
+      <section class="screen secondary" id="screen-tags">
+        <header class="topbar green center-title">
+          <button class="icon-btn" data-back>‹</button>
+          <h1>Tags</h1>
+          <div class="topbar-side"></div>
+        </header>
+        <div class="content-area secondary-content empty-state-wrap">
+          <div class="empty-illustration">🔎</div>
+          <h2>Nenhuma tag cadastrada</h2>
+          <p>Adicione tags personalizadas para enriquecer a categorização de seus lançamentos</p>
+          <button class="link-green">Adicionar tag ＋</button>
+        </div>
+      </section>
+
+      <section class="screen secondary" id="screen-help">
+        <header class="topbar light">
+          <button class="icon-btn" data-back>‹</button>
+          <div class="topbar-side"></div>
+          <div class="topbar-actions">
+            <button class="icon-btn">🔔</button>
+            <button class="icon-btn" data-open-screen="screen-settings">⚙</button>
+          </div>
+        </header>
+        <div class="content-area secondary-content">
+          <div class="blue-plan-card compact">
+            <div class="plan-badge">☆</div>
+            <div>
+              <h3>Você está no Plano Manual</h3>
+              <p>Assinatura mensal - Renova em 15/01/2026</p>
+            </div>
+            <button class="plan-btn">Migrar para plano anual</button>
+          </div>
+          <div class="section-card feedback-card">
+            <h2>Você está gostando do Organizze?</h2>
+            <p>Queremos muito saber como está sendo sua experiência com nosso aplicativo.</p>
+            <div class="feedback-grid">
+              <button>😞<span>Pode melhorar</span></button>
+              <button>😍<span>Estou gostando</span></button>
+            </div>
+          </div>
+          <div class="section-card clickable-stack">
+            <button class="row-button">Ver guia de passos iniciais</button>
+            <button class="row-button">Indique o app a um amigo</button>
+          </div>
+          <div class="section-card help-card">
+            <div class="empty-illustration small">💬</div>
+            <h2>Como podemos te ajudar?</h2>
+            <p>Se você está com alguma dúvida ou teve algum problema, é só entrar em contato com nosso time.</p>
+            <div class="help-options">
+              <button>Central de Ajuda</button>
+              <button>Converse com a gente</button>
+              <button>Falar por WhatsApp</button>
+            </div>
+            <div class="social-row"><span>f</span><span>X</span><span>◎</span><span>in</span></div>
+            <div class="version-text">Versão: 7.4.18</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-open-screen="screen-home"><span>⌂</span><small>Início</small></button>
+      <button class="nav-item" data-open-screen="screen-fluxo"><span>⇄</span><small>Fluxo</small></button>
+      <button class="nav-item" data-open-screen="screen-reports"><span>∣∣∣</span><small>Relatórios</small></button>
+      <button class="nav-item" data-open-screen="screen-categories"><span>◎</span><small>Categorias</small></button>
+      <button class="nav-item" data-open-screen="screen-profile"><span>☺</span><small>Perfil</small></button>
+    </nav>
+  </div>
+
+  <dialog class="sheet-dialog" id="transactionFormDialog">
+    <form class="sheet-card form-sheet" id="transactionForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h2 id="transactionFormTitle">Novo lançamento</h2>
+        <button type="button" class="icon-btn close-sheet" data-close-dialog="transactionFormDialog">✕</button>
+      </div>
+      <input type="hidden" name="id" />
+      <label>Data<input type="date" name="data" required></label>
+      <label>Tipo<select name="tipo"><option>Despesa</option><option>Receita</option></select></label>
+      <label>Descrição<input type="text" name="descricao" placeholder="Ex.: Energia" required></label>
+      <label>Valor<input type="number" step="0.01" name="valor" placeholder="0,00" required></label>
+      <label>Categoria<select name="categoria" id="transactionCategorySelect"></select></label>
+      <label>Conta<select name="conta" id="transactionAccountSelect"></select></label>
+      <label>Status<select name="status"><option>Pendente</option><option>Pago</option></select></label>
+      <div class="sheet-actions-row two">
+        <button type="button" class="secondary-btn" id="btnDuplicateInForm">Duplicar</button>
+        <button type="submit" class="primary-btn">Salvar lançamento</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="sheet-dialog" id="transactionDetailDialog">
+    <div class="sheet-card detail-sheet">
+      <div class="sheet-handle"></div>
+      <div class="detail-main">
+        <div class="detail-icon" id="detailCategoryIcon">%</div>
+        <h2 id="detailDescription">Energia</h2>
+        <div class="detail-value" id="detailValue">-R$ 0,00</div>
+        <div class="detail-fixed-pill">Lançamento fixo</div>
+      </div>
+      <div class="detail-actions-grid">
+        <button class="round-action" id="btnDeleteTransaction"><span>🗑</span><small>Excluir</small></button>
+        <button class="round-action" id="btnDuplicateTransaction"><span>⧉</span><small>Duplicar</small></button>
+        <button class="round-action" id="btnToggleTransactionStatus"><span>↻</span><small>Status</small></button>
+        <button class="round-action" id="btnEditTransaction"><span>✎</span><small>Editar</small></button>
+      </div>
+      <div class="detail-grid" id="detailGrid"></div>
+      <div class="sheet-bottom-space"></div>
+    </div>
+  </dialog>
+
+  <dialog class="sheet-dialog" id="flowMenuDialog">
+    <div class="sheet-card options-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head minimal"><h2>Opções de visualização</h2><button class="icon-btn close-sheet" data-close-dialog="flowMenuDialog">✕</button></div>
+      <button class="menu-row">Pesquisar</button>
+      <button class="menu-row" id="btnOpenFilterDialog">Filtrar</button>
+      <button class="menu-row" id="btnOpenPeriodDialog">Alterar período de visualização</button>
+    </div>
+  </dialog>
+
+  <dialog class="sheet-dialog" id="viewModeDialog">
+    <div class="sheet-card mode-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head minimal"><h2>Modo de visualização</h2><button class="icon-btn close-sheet" data-close-dialog="viewModeDialog">✕</button></div>
+      <div class="segmented-control" id="viewModeSegmented">
+        <button class="segment active" data-view-mode="cashflow">Fluxo de caixa</button>
+        <button class="segment" data-view-mode="all">Todos os lançamentos</button>
+      </div>
+      <div class="mode-preview">📱</div>
+      <div class="mode-description">
+        <h3>O que você verá com este modo:</h3>
+        <ol id="viewModeText"></ol>
+      </div>
+      <div class="sheet-actions-row">
+        <button class="primary-btn" id="btnApplyViewMode" type="button">Selecionar</button>
+        <button class="text-btn" type="button" data-close-dialog="viewModeDialog">Cancelar</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="sheet-dialog" id="filterDialog">
+    <form class="sheet-card filter-sheet" id="filterForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head minimal"><h2>Filtro de lançamentos</h2><button class="icon-btn close-sheet" data-close-dialog="filterDialog">✕</button></div>
+      <div class="filter-section">
+        <div class="filter-title-row"><h3>Tipo</h3><button class="pill-btn small" type="submit">Filtrar</button></div>
+        <div class="chip-group">
+          <label class="chip"><input type="checkbox" name="tipo" value="Receita">Receitas</label>
+          <label class="chip"><input type="checkbox" name="tipo" value="Despesa">Despesas</label>
+        </div>
+      </div>
+      <div class="filter-section">
+        <h3>Situação</h3>
+        <div class="chip-group">
+          <label class="chip"><input type="checkbox" name="status" value="Pago">Resolvido</label>
+          <label class="chip"><input type="checkbox" name="status" value="Pendente">Pendente</label>
+        </div>
+      </div>
+      <div class="filter-section">
+        <h3>Contas</h3>
+        <div id="filterAccounts" class="bank-grid"></div>
+      </div>
+      <div class="filter-section">
+        <h3>Categorias</h3>
+        <select name="categoria" class="wide-select"><option value="">Todas as categorias</option></select>
+      </div>
+      <div class="sheet-actions-row centered">
+        <button class="confirm-round" type="submit">✓</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="sheet-dialog" id="periodDialog">
+    <div class="sheet-card period-sheet">
+      <div class="sheet-head minimal"><h2>Alterar período de visualização</h2><button class="icon-btn close-sheet" data-close-dialog="periodDialog">✕</button></div>
+      <div class="radio-list">
+        <label><input type="radio" name="periodOption" value="today"> Hoje</label>
+        <label><input type="radio" name="periodOption" checked value="month"> Mês atual</label>
+        <label><input type="radio" name="periodOption" value="year"> Este ano</label>
+        <label><input type="radio" name="periodOption" value="7"> Últimos 7 dias</label>
+        <label><input type="radio" name="periodOption" value="15"> Últimos 15 dias</label>
+        <label><input type="radio" name="periodOption" value="30"> Últimos 30 dias</label>
+        <label><input type="radio" name="periodOption" value="custom"> Período personalizado</label>
+      </div>
+      <button class="primary-btn full-width" id="btnApplyPeriod" type="button">Selecionar novo período</button>
+    </div>
+  </dialog>
+
+  <dialog class="sheet-dialog" id="accountFormDialog">
+    <form class="sheet-card form-sheet" id="accountForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head"><h2>Nova conta</h2><button type="button" class="icon-btn close-sheet" data-close-dialog="accountFormDialog">✕</button></div>
+      <label>Nome<input type="text" name="nome" required></label>
+      <label>Saldo atual<input type="number" step="0.01" name="saldo" required></label>
+      <label>Status<select name="status"><option value="ativa">Ativa</option><option value="arquivada">Arquivada</option></select></label>
+      <button class="primary-btn" type="submit">Salvar conta</button>
+    </form>
+  </dialog>
+
+  <dialog class="sheet-dialog" id="cardFormDialog">
+    <form class="sheet-card form-sheet" id="cardForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head"><h2>Novo cartão</h2><button type="button" class="icon-btn close-sheet" data-close-dialog="cardFormDialog">✕</button></div>
+      <label>Nome<input type="text" name="nome" required></label>
+      <label>Fatura atual<input type="number" step="0.01" name="fatura" required></label>
+      <label>Disponível<input type="number" step="0.01" name="disponivel" required></label>
+      <label>Fecha dia<input type="number" min="1" max="31" name="fecha"></label>
+      <label>Vence dia<input type="number" min="1" max="31" name="vence"></label>
+      <button class="primary-btn" type="submit">Salvar cartão</button>
+    </form>
+  </dialog>
+
+  <dialog class="sheet-dialog" id="categoryFormDialog">
+    <form class="sheet-card form-sheet" id="categoryForm">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head"><h2>Nova categoria</h2><button type="button" class="icon-btn close-sheet" data-close-dialog="categoryFormDialog">✕</button></div>
+      <label>Nome<input type="text" name="nome" required></label>
+      <label>Tipo<select name="tipo"><option>Despesa</option><option>Receita</option></select></label>
+      <button class="primary-btn" type="submit">Salvar categoria</button>
+    </form>
+  </dialog>
+
+  <dialog class="sheet-dialog" id="reportIntroDialog">
+    <div class="sheet-card report-intro-sheet">
+      <div class="sheet-handle"></div>
+      <div class="report-intro-slide active" data-slide="0">
+        <h2>Novidades em Relatórios</h2>
+        <div class="report-preview-card">📊</div>
+        <h3>Divisão por abas</h3>
+        <p>Agora os relatórios estão organizados em abas. Navegue entre Categorias, Balanço e Tags e analise cada informação com mais foco.</p>
+      </div>
+      <div class="report-intro-slide" data-slide="1">
+        <h2>Novidades em Relatórios</h2>
+        <div class="report-preview-card">🟢</div>
+        <h3>Relatório de receita</h3>
+        <p>Agora é possível listar as receitas no relatório de categorias na mesma tela.</p>
+      </div>
+      <div class="report-intro-slide" data-slide="2">
+        <h2>Novidades em Relatórios</h2>
+        <div class="report-preview-card">🧾</div>
+        <h3>Categorias expandidas</h3>
+        <p>Ao clicar em uma categoria ou subcategoria, você pode ver os lançamentos detalhados no relatório.</p>
+      </div>
+      <div class="report-intro-slide" data-slide="3">
+        <h2>Novidades em Relatórios</h2>
+        <div class="report-preview-card">🏷</div>
+        <h3>O relatório de tags chegou no app</h3>
+        <p>Acompanhe seus lançamentos organizados por tags nesse novo relatório.</p>
+      </div>
+      <div class="intro-controls">
+        <button class="outline-nav" id="btnReportSlidePrev">‹</button>
+        <div class="dots" id="reportIntroDots"></div>
+        <button class="outline-nav" id="btnReportSlideNext">›</button>
+      </div>
+      <div class="sheet-actions-row centered two-buttons">
+        <button class="text-btn" id="btnSkipReportIntro" type="button">Pular</button>
+        <button class="primary-btn" id="btnCloseReportIntro" type="button">Concluir</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(console.warn));
+    }
+  </script>
+</body>
+</html>
