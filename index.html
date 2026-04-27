@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Meu Controle 3.1.8</title>
+  <title>Meu Controle 3.1.9</title>
   <meta name="theme-color" content="#18b846" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Meu Controle" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
@@ -24,6 +27,7 @@
           <button data-open-screen="screen-home">visão geral</button>
           <button data-open-screen="screen-fluxo">lançamentos</button>
           <button data-open-screen="screen-reports">relatórios</button>
+          <button data-open-screen="screen-news">mercado</button>
           <button data-open-screen="screen-categories">limite de gastos</button>
           <button data-open-screen="screen-accounts">conexão bancária</button>
         </div>
@@ -33,6 +37,7 @@
           <button class="desktop-avatar" id="desktopAvatarButton"><span id="desktopAvatarText">D</span><img id="desktopAvatarImage" class="avatar-img hidden" alt="Foto do perfil"></button>
         </div>
       </nav>
+      <div class="market-ticker" id="marketTicker"><div class="ticker-track" id="tickerTrack">Carregando cotações...</div></div>
       <section class="screen active" id="screen-home">
         <header class="topbar light">
           <div class="topbar-side"></div>
@@ -339,6 +344,35 @@
         </div>
       </section>
 
+
+      <section class="screen secondary" id="screen-news">
+        <header class="topbar green center-title">
+          <button class="icon-btn" data-back>‹</button>
+          <h1>Mercado</h1>
+          <button class="icon-btn" id="btnRefreshMarket">↻</button>
+        </header>
+        <div class="content-area secondary-content news-content">
+          <div class="news-hero-card">
+            <div>
+              <span>Central de mercado</span>
+              <h2>Notícias e cotações em um só lugar</h2>
+              <p>Acompanhe moedas, cripto e os principais assuntos do mercado financeiro. A barra de cotações pode ser ativada ou desativada nas configurações.</p>
+            </div>
+            <div class="news-hero-badge">AI</div>
+          </div>
+
+          <div class="market-grid" id="marketCards"></div>
+
+          <div class="section-card news-card-list">
+            <div class="section-title-row">
+              <h2>Notícias do mundo financeiro</h2>
+              <button class="link-btn" id="btnOpenNewsSearch">Ver mais</button>
+            </div>
+            <div id="newsList" class="news-list"></div>
+          </div>
+        </div>
+      </section>
+
       <section class="screen secondary" id="screen-settings">
         <header class="topbar green center-title">
           <button class="icon-btn" data-back>‹</button>
@@ -351,6 +385,10 @@
             <div class="toggle-row radio on"><span>Usar do sistema</span><span class="radio-dot"></span></div>
             <div class="toggle-row radio"><span>Modo escuro</span><span class="radio-dot"></span></div>
             <div class="toggle-row radio"><span>Modo claro</span><span class="radio-dot"></span></div>
+          </div>
+          <div class="section-card toggle-card">
+            <h2>Mercado financeiro</h2>
+            <div class="toggle-row"><span>Mostrar barra de cotações</span><button class="switch on" id="marketTickerSwitch"></button></div>
           </div>
           <div class="section-card toggle-card">
             <h2>Ordem dos lançamentos</h2>

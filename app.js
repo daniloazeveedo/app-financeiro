@@ -1,7 +1,7 @@
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const STORAGE_KEY = 'meuControleV31';
-const mainScreens = ['screen-home','screen-fluxo','screen-reports','screen-categories','screen-profile'];
+const mainScreens = ['screen-home','screen-fluxo','screen-reports','screen-categories','screen-profile','screen-news'];
 const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
 const defaultState = {
@@ -52,6 +52,7 @@ const defaultState = {
     filters:{ tipos:[], status:[], accounts:[], categoria:'' },
     period:'month',
     theme:'system',
+    showMarketTicker:true,
     profile:{
       name:'Danilo & Isabella',
       subtitle:'Seu controle financeiro estilo Organizze',
@@ -699,6 +700,72 @@ function renderReportIntro(){
   dots.innerHTML = slides.map((_, index) => `<span class="${index === reportsSlideIndex ? 'active' : ''}"></span>`).join('');
 }
 
+
+const fallbackMarketData = [
+  { symbol:'USD/BRL', price:'5,61', change:'+0,24%' },
+  { symbol:'EUR/BRL', price:'6,02', change:'-0,11%' },
+  { symbol:'BTC/BRL', price:'520.000', change:'+1,18%' },
+  { symbol:'Ibovespa', price:'134.000', change:'+0,46%' }
+];
+
+const marketNews = [
+  { title:'Dólar, euro e bitcoin no radar do dia', desc:'Acompanhe as principais variações para planejar melhor seus gastos e investimentos.', tag:'Cotações', icon:'↗' },
+  { title:'Mercado financeiro: juros, inflação e renda variável', desc:'Resumo rápido para entender o que pode afetar seu orçamento no mês.', tag:'Mercado', icon:'◷' },
+  { title:'Organização financeira pessoal', desc:'Veja alertas de contas, cartões e projeção de saldo antes de assumir novos gastos.', tag:'Finanças', icon:'✓' }
+];
+
+function tickerClass(change){
+  const text = String(change || '');
+  if(text.startsWith('+')) return 'ticker-up';
+  if(text.startsWith('-')) return 'ticker-down';
+  return 'ticker-flat';
+}
+
+function normalizeBRLQuote(item, symbol){
+  const bid = Number(item?.bid || item?.ask || 0);
+  const pct = Number(item?.pctChange || 0);
+  return {
+    symbol,
+    price: bid ? bid.toLocaleString('pt-BR', { minimumFractionDigits: symbol.includes('BTC') ? 0 : 2, maximumFractionDigits: symbol.includes('BTC') ? 0 : 2 }) : '0,00',
+    change: `${pct >= 0 ? '+' : ''}${pct.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`
+  };
+}
+
+async function loadMarketData(){
+  try{
+    const response = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL', { cache:'no-store' });
+    if(!response.ok) throw new Error('cotação indisponível');
+    const data = await response.json();
+    return [
+      normalizeBRLQuote(data.USDBRL, 'USD/BRL'),
+      normalizeBRLQuote(data.EURBRL, 'EUR/BRL'),
+      normalizeBRLQuote(data.BTCBRL, 'BTC/BRL'),
+      fallbackMarketData[3]
+    ];
+  }catch(error){
+    return fallbackMarketData;
+  }
+}
+
+async function renderMarket(){
+  const show = state.meta.showMarketTicker !== false;
+  const ticker = $('#marketTicker');
+  if(ticker) ticker.classList.toggle('hidden', !show);
+  const switchEl = $('#marketTickerSwitch');
+  if(switchEl) switchEl.classList.toggle('on', show);
+
+  const data = await loadMarketData();
+  if($('#tickerTrack')){
+    $('#tickerTrack').innerHTML = data.map(item => `<span class="ticker-item"><strong>${item.symbol}</strong><span>R$ ${item.price}</span><span class="${tickerClass(item.change)}">${item.change}</span></span>`).join('');
+  }
+  if($('#marketCards')){
+    $('#marketCards').innerHTML = data.map(item => `<div class="market-card"><span>${item.symbol}</span><strong>R$ ${item.price}</strong><small class="${tickerClass(item.change)}">${item.change}</small></div>`).join('');
+  }
+  if($('#newsList')){
+    $('#newsList').innerHTML = marketNews.map(item => `<article class="news-item"><div class="news-icon">${item.icon}</div><div><h3>${item.title}</h3><p>${item.desc}</p></div><span class="news-tag">${item.tag}</span></article>`).join('');
+  }
+}
+
 function capitalize(text){ return text.charAt(0).toUpperCase() + text.slice(1); }
 
 function renderAll(){
@@ -712,6 +779,7 @@ function renderAll(){
   renderReports();
   populateFilterOptions();
   renderReportIntro();
+  renderMarket();
 }
 
 function exportExcel(){
@@ -729,6 +797,10 @@ $$('[data-back]').forEach(btn => btn.addEventListener('click', goBack));
 $('#btnToggleHideBalance').addEventListener('click', toggleHide);
 if ($('#btnDesktopToggleHideBalance')) $('#btnDesktopToggleHideBalance').addEventListener('click', toggleHide);
 if ($('#btnDesktopToggleHideBalanceAlt')) $('#btnDesktopToggleHideBalanceAlt').addEventListener('click', toggleHide);
+if ($('#marketTickerSwitch')) $('#marketTickerSwitch').addEventListener('click', () => { state.meta.showMarketTicker = state.meta.showMarketTicker === false; saveState(); renderMarket(); });
+if ($('#btnRefreshMarket')) $('#btnRefreshMarket').addEventListener('click', renderMarket);
+if ($('#btnOpenNewsSearch')) $('#btnOpenNewsSearch').addEventListener('click', () => window.open('https://news.google.com/search?q=mercado%20financeiro%20Brasil', '_blank'));
+setInterval(renderMarket, 60000);
 $('#btnPrevMonth').addEventListener('click', () => { state.meta.currentMonth = shiftMonth(state.meta.currentMonth,-1); saveState(); renderFlow(); renderHome(); });
 $('#btnNextMonth').addEventListener('click', () => { state.meta.currentMonth = shiftMonth(state.meta.currentMonth,1); saveState(); renderFlow(); renderHome(); });
 $('#labelPrevMonth').addEventListener('click', () => { state.meta.currentMonth = shiftMonth(state.meta.currentMonth,-1); saveState(); renderFlow(); renderHome(); });
