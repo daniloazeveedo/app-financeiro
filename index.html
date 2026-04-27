@@ -40,61 +40,144 @@
           <button class="icon-btn" data-open-screen="screen-settings">⚙</button>
         </header>
 
-        <div class="content-area with-nav">
-          <div class="hero-card">
-            <div class="profile-mini">
-              <div class="avatar-ring"><div class="avatar-photo">D&I</div></div>
-              <div>
-                <div class="hero-title">Danilo &amp; Isabella</div>
-                <div class="hero-subtitle">Seu controle financeiro estilo Organizze</div>
+        <div class="content-area with-nav home-responsive-area">
+          <div class="home-desktop-only">
+            <div class="desktop-home-hero desktop-home-card">
+              <div class="desktop-home-hero-left">
+                <div class="desktop-home-greeting">
+                  <div>
+                    <div class="desktop-home-greeting-label" id="homeDesktopGreeting">Boa tarde,</div>
+                    <div class="desktop-home-greeting-name">Danilo &amp; Isabella</div>
+                  </div>
+                </div>
+                <div class="desktop-home-metrics">
+                  <div class="desktop-home-metric">
+                    <span>Receita mensal</span>
+                    <strong class="positive" id="homeIncomeDesktop">R$ 0,00</strong>
+                  </div>
+                  <div class="desktop-home-divider"></div>
+                  <div class="desktop-home-metric">
+                    <span>Despesa mensal</span>
+                    <strong class="negative" id="homeExpenseDesktop">R$ 0,00</strong>
+                  </div>
+                  <button class="desktop-chart-button" data-open-screen="screen-reports">↗</button>
+                </div>
+              </div>
+              <div class="desktop-home-hero-right">
+                <div class="desktop-home-panel-title">Conexões ativas</div>
+                <div class="desktop-connections-list" id="homeConnectionsDesktop"></div>
               </div>
             </div>
-            <div class="hero-balance">
-              <div>
-                <span>Saldo geral</span>
-                <strong id="homeTotalBalance">R$ 0,00</strong>
+
+            <div class="desktop-home-grid-main">
+              <div class="desktop-home-card desktop-balance-card">
+                <div class="desktop-balance-head">
+                  <div>
+                    <div class="desktop-inline-title">Saldo geral</div>
+                    <div class="desktop-balance-value" id="homeTotalBalanceDesktop">R$ 0,00</div>
+                  </div>
+                  <button class="desktop-eye-button" data-home-toggle-hide>Ocultar</button>
+                </div>
+                <div class="desktop-home-section-title">Minhas contas</div>
+                <div id="homeAccountsListDesktop" class="desktop-home-list"></div>
               </div>
-              <button id="btnToggleHideBalance" class="pill-btn">Ocultar</button>
+
+              <div class="desktop-home-card desktop-invoice-card">
+                <div class="desktop-balance-head">
+                  <div>
+                    <div class="desktop-inline-title">Faturas de <span id="homeDesktopMonthLabel">Abril</span></div>
+                    <div class="desktop-balance-value negative" id="homeCardsTotalDesktop">R$ 0,00</div>
+                  </div>
+                  <button class="desktop-eye-button" data-home-toggle-hide>Ocultar</button>
+                </div>
+                <div class="desktop-home-section-title">Meus cartões</div>
+                <div id="homeCardsListDesktop" class="desktop-home-list"></div>
+              </div>
+            </div>
+
+            <div class="desktop-home-grid-bottom">
+              <div class="desktop-home-card desktop-summary-card">
+                <div class="section-title-row desktop-section-title-row">
+                  <h2>Resumo rápido</h2>
+                  <button class="link-btn" data-open-screen="screen-fluxo">Ver fluxo</button>
+                </div>
+                <div class="summary-grid desktop-summary-grid">
+                  <div><small>Entradas</small><strong class="positive" id="homeIncomeDesktopSummary">R$ 0,00</strong></div>
+                  <div><small>Saídas</small><strong class="negative" id="homeExpenseDesktopSummary">R$ 0,00</strong></div>
+                  <div><small>Saldo previsto</small><strong class="accent" id="homeForecastDesktop">R$ 0,00</strong></div>
+                </div>
+              </div>
+
+              <div class="desktop-home-card desktop-quick-card">
+                <div class="section-title-row desktop-section-title-row">
+                  <h2>Acesso rápido</h2>
+                </div>
+                <div class="quick-actions desktop-quick-actions">
+                  <button class="quick-action" data-open-screen="screen-categories">Categorias</button>
+                  <button class="quick-action" data-open-screen="screen-tags">Tags</button>
+                  <button class="quick-action" data-open-screen="screen-profile">Perfil</button>
+                  <button class="quick-action" data-open-screen="screen-help">Ajuda</button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="section-card">
-            <div class="section-title-row">
-              <h2>Resumo rápido</h2>
-              <button class="link-btn" data-open-screen="screen-fluxo">Ver fluxo</button>
+          <div class="home-mobile-only">
+            <div class="hero-card">
+              <div class="profile-mini">
+                <div class="avatar-ring"><div class="avatar-photo">D&amp;I</div></div>
+                <div>
+                  <div class="hero-title">Danilo &amp; Isabella</div>
+                  <div class="hero-subtitle">Seu controle financeiro estilo Organizze</div>
+                </div>
+              </div>
+              <div class="hero-balance">
+                <div>
+                  <span>Saldo geral</span>
+                  <strong id="homeTotalBalance">R$ 0,00</strong>
+                </div>
+                <button id="btnToggleHideBalance" class="pill-btn" data-home-toggle-hide>Ocultar</button>
+              </div>
             </div>
-            <div class="summary-grid">
-              <div><small>Entradas</small><strong class="positive" id="homeIncome">R$ 0,00</strong></div>
-              <div><small>Saídas</small><strong class="negative" id="homeExpense">R$ 0,00</strong></div>
-              <div><small>Saldo previsto</small><strong class="accent" id="homeForecast">R$ 0,00</strong></div>
-            </div>
-          </div>
 
-          <div class="section-card">
-            <div class="section-title-row">
-              <h2>Contas</h2>
-              <button class="link-btn" data-open-screen="screen-accounts">Gerenciar</button>
+            <div class="section-card">
+              <div class="section-title-row">
+                <h2>Resumo rápido</h2>
+                <button class="link-btn" data-open-screen="screen-fluxo">Ver fluxo</button>
+              </div>
+              <div class="summary-grid">
+                <div><small>Entradas</small><strong class="positive" id="homeIncome">R$ 0,00</strong></div>
+                <div><small>Saídas</small><strong class="negative" id="homeExpense">R$ 0,00</strong></div>
+                <div><small>Saldo previsto</small><strong class="accent" id="homeForecast">R$ 0,00</strong></div>
+              </div>
             </div>
-            <div id="homeAccountsList" class="list-stack"></div>
-          </div>
 
-          <div class="section-card">
-            <div class="section-title-row">
-              <h2>Cartões</h2>
-              <button class="link-btn" data-open-screen="screen-cards">Ver todos</button>
+            <div class="section-card">
+              <div class="section-title-row">
+                <h2>Contas</h2>
+                <button class="link-btn" data-open-screen="screen-accounts">Gerenciar</button>
+              </div>
+              <div id="homeAccountsList" class="list-stack"></div>
             </div>
-            <div id="homeCardsList" class="list-stack"></div>
-          </div>
 
-          <div class="section-card">
-            <div class="section-title-row">
-              <h2>Acesso rápido</h2>
+            <div class="section-card">
+              <div class="section-title-row">
+                <h2>Cartões</h2>
+                <button class="link-btn" data-open-screen="screen-cards">Ver todos</button>
+              </div>
+              <div id="homeCardsList" class="list-stack"></div>
             </div>
-            <div class="quick-actions">
-              <button class="quick-action" data-open-screen="screen-categories">Categorias</button>
-              <button class="quick-action" data-open-screen="screen-tags">Tags</button>
-              <button class="quick-action" data-open-screen="screen-profile">Perfil</button>
-              <button class="quick-action" data-open-screen="screen-help">Ajuda</button>
+
+            <div class="section-card">
+              <div class="section-title-row">
+                <h2>Acesso rápido</h2>
+              </div>
+              <div class="quick-actions">
+                <button class="quick-action" data-open-screen="screen-categories">Categorias</button>
+                <button class="quick-action" data-open-screen="screen-tags">Tags</button>
+                <button class="quick-action" data-open-screen="screen-profile">Perfil</button>
+                <button class="quick-action" data-open-screen="screen-help">Ajuda</button>
+              </div>
             </div>
           </div>
         </div>
