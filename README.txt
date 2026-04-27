@@ -105,3 +105,14 @@ Atualização 3.2.4:
 - botão Adicionar ativo corrigido e modal priorizado sobre as telas;
 - configurações reorganizadas novamente para evitar cortes/sobreposição;
 - barras internas das abas alinhadas para desktop.
+
+
+Atualização 3.2.5:
+- removida chamada direta à Brapi no front-end para evitar erro 401;
+- cotações usam AwesomeAPI para dólar/euro/bitcoin e fallback local para B3/índices;
+- ticker não fica vazio e rola automaticamente mesmo se API falhar;
+- paleta alterada para verde/cream: #16C64F, #008440, #2F473F e #FBF7EA;
+- topo voltou para estilo verde, inspirado no Organizze;
+- logo criado em CSS inspirado no símbolo verde enviado;
+- botão Adicionar ativo corrigido e modal preservado;
+- configurações e barras internas mantidas com correções de alinhamento.
